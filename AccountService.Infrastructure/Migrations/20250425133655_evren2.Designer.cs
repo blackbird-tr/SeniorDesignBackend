@@ -4,6 +4,7 @@ using AccountService.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250425133655_evren2")]
+    partial class evren2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -762,25 +765,25 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.Cargo", "Cargo")
                         .WithMany()
                         .HasForeignKey("CargoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AccountService.Domain.Entities.Carrier", "Carrier")
                         .WithMany()
                         .HasForeignKey("CarrierId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AccountService.Domain.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AccountService.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany()
                         .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Cargo");
@@ -797,7 +800,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -808,7 +811,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.VehicleType", "VehicleType")
                         .WithMany()
                         .HasForeignKey("VehicleTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("VehicleType");
@@ -819,13 +822,12 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.Booking", "Booking")
                         .WithMany()
                         .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AccountService.Domain.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Booking");
 
@@ -836,8 +838,7 @@ namespace AccountService.Infrastructure.Migrations
                 {
                     b.HasOne("AccountService.Domain.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });
@@ -847,7 +848,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.Booking", "Booking")
                         .WithMany()
                         .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Booking");
@@ -858,7 +859,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -869,7 +870,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.Carrier", "Carrier")
                         .WithMany()
                         .HasForeignKey("CarrierId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AccountService.Domain.Entities.VehicleType", "VehicleType")
@@ -888,7 +889,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -897,7 +898,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -906,7 +907,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -915,13 +916,13 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AccountService.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -930,7 +931,7 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasOne("AccountService.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

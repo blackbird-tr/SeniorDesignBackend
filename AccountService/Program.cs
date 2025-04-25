@@ -1,5 +1,8 @@
 using AccountService.Application;
+using AccountService.Application.Interfaces;
 using AccountService.Infrastructure;
+using AccountService.Infrastructure.Services;
+using AccountService.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerExtension();
 
+builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
 builder.Services.AddApplicationLayer();
 builder.Services.InfraPersistence(builder.Configuration);
 var app = builder.Build();
