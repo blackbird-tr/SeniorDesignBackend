@@ -97,6 +97,7 @@ namespace AccountService.Infrastructure
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICarrierService, CarrierRepositoryAsync>();
             services.AddTransient<ICustomerService, CustomerRepositoryAsync>();
+            services.AddTransient<IVehicleTypeService, VehicleTypeRepositoryAsync>();
             
             services.AddTransient<IDateTimeService, DateTimeService>();
 
