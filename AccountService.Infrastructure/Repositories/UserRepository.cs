@@ -192,11 +192,10 @@ namespace AccountService.Infrastructure.Repositories
             {
                 Email = request.Email,
                 BirthYear = request.BirthYear,
-                Name = request.FirstName,
-                Surname = request.LastName,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 UserName = request.UserName,
-                PhoneNumber = request.PhoneNumber,
-                DateCreated=DateTime.UtcNow
+                PhoneNumber = request.PhoneNumber 
             };
             var result=await _userManager.CreateAsync(user,request.Password);
 
@@ -279,7 +278,7 @@ namespace AccountService.Infrastructure.Repositories
         {
            var user=await _userManager.FindByIdAsync(getUserByIdRequest.UserID);
             if (user == null) { throw new Exception("User not found"); }
-            return new GetUserByIdResponse() { BirthYear = user.BirthYear,Email=user.Email,Name=user.Name,PhoneNumber=user.PhoneNumber,Surname=user.Surname };
+            return new GetUserByIdResponse() { BirthYear = user.BirthYear,Email=user.Email,Name=user.FirstName,PhoneNumber=user.PhoneNumber,Surname=user.LastName };
         }
 
         public async Task<UpdateUserResponse> UpdateUser(UpdateUserRequest updateUserRequest)
@@ -289,8 +288,8 @@ namespace AccountService.Infrastructure.Repositories
 
             // Sadece güncellenmesi gereken alanları değiştir
             user.BirthYear = updateUserRequest.BirthYear;
-            user.Name = updateUserRequest.FirstName;
-            user.Surname = updateUserRequest.LastName;
+            user.FirstName = updateUserRequest.FirstName;
+            user.LastName = updateUserRequest.LastName;
 
             _context.Users.Update(user); // Bu satır aslında gereksiz, SaveChanges zaten takip ediyor
             await _context.SaveChangesAsync();

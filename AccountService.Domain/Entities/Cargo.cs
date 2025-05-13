@@ -1,23 +1,42 @@
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using AccountService.Domain.Enums;
 
 namespace AccountService.Domain.Entities
 {
     public class Cargo : BaseEntity
     {
-    public int CargoId { get; set; }
-    public int CustomerId { get; set; }
-    public string Desc { get; set; }
-    public double Weight { get; set; }
-    public string CargoType { get; set; }
-    public string PickUpLocation { get; set; }
-    public string DropOffLocation { get; set; }
-    public string Status { get; set; }
-        public virtual Customer Customer { get; set; }
-        
+        [Required]
+        public int CustomerId { get; set; }
+
+        [MaxLength(255)]
+        public string? Description { get; set; }
+
+        public float? Weight { get; set; }
+
+        [MaxLength(50)]
+        public string? CargoType { get; set; }
+
+        [Required]
+        public int PickupLocationId { get; set; }
+
+        [Required]
+        public int DropoffLocationId { get; set; }
+
+        public byte Status { get; set; }
+
+        // Navigation properties
+        public Customer Customer { get; set; }
+        public Location PickupLocation { get; set; }
+        public Location DropoffLocation { get; set; }
+        public ICollection<Booking> Bookings { get; set; } = new HashSet<Booking>();
+
+        // Enum property
+        [NotMapped]
+        public CargoStatus CargoStatus
+        {
+            get => (CargoStatus)Status;
+            set => Status = (byte)value;
+        }
     }
 }

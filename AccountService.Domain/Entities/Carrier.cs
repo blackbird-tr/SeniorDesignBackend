@@ -1,19 +1,29 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountService.Domain.Entities
 {
     public class Carrier : BaseEntity
     {
-    public int CarrierId { get; set; }
-    public int VehicleTypeId { get; set; }
-    public string LicenseNumber { get; set; }
-    public bool AvailabilityStatus { get; set; }
-        public virtual VehicleType VehicleType { get; set; }
-        
+        [Required]
+        public string UserId { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string LicenseNumber { get; set; }
+
+        [Required]
+        public bool AvailabilityStatus { get; set; }
+
+        // Navigation properties
+          [ForeignKey(nameof(UserId))]
+        public User User { get; set; }
+        public ICollection<Vehicle> Vehicles { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
     }
 }

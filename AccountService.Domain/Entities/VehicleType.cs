@@ -1,10 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace AccountService.Domain.Entities
 {
     public class VehicleType : BaseEntity
     {
-    public int VehicleTypeId { get; set; }
-    public string Name { get; set; }
-    public string Desc { get; set; }
-        public virtual ICollection<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
+        [Required]
+        [MaxLength(100)]
+        public string Name { get; set; }
+
+        [MaxLength(255)]
+        public string? Description { get; set; }
+
+        // Navigation properties
+        public ICollection<Vehicle> Vehicles { get; set; }
     }
 }

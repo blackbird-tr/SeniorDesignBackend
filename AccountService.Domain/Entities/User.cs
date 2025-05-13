@@ -4,21 +4,30 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccountService.Domain.Entities
 {
-    public class User:IdentityUser
+    public class User : IdentityUser
     {
-        public User()
-        {
-            RefreshTokens=new HashSet<RefreshToken>();  
-        }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public int BirthYear { get; set; }
-        public DateTime DateCreated { get; set; }
-        public virtual ICollection<RefreshToken> RefreshTokens { get; set;}
-         
+        [Required]
+        [MaxLength(50)]
+        public string FirstName { get; set; }
 
+        [Required]
+        [MaxLength(50)]
+        public string LastName { get; set; }
+        [Required]
+        public int  BirthYear { get; set; }
+
+        [MaxLength(100)]
+        public string? CompanyName { get; set; }
+
+       
+
+        // Navigation properties
+        public Customer? Customer { get; set; }
+        public Carrier? Carrier { get; set; }
+        public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
     }
 }

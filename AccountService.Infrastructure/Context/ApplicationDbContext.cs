@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Infrastructure.Context
 {
@@ -23,7 +24,7 @@ namespace AccountService.Infrastructure.Context
             _dateTimeService = dateTimeService;
             _authenticatedUserService = authenticatedUserService;
         }
-
+     
         // DbSet Properties
         public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -45,8 +46,9 @@ namespace AccountService.Infrastructure.Context
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.AddedDate = _dateTimeService.NowUtc;
+                        entry.Entity.CreatedDate = _dateTimeService.NowUtc;
                         entry.Entity.AddedBy = _authenticatedUserService.UserId;
+                        entry.Entity.Active = true;
                         break;
 
                     case EntityState.Modified:
@@ -61,6 +63,9 @@ namespace AccountService.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.AppendQueryFilter<IBaseEntity>(x => x.Active);
+
+
             base.OnModelCreating(modelBuilder); // Identity tabloları için şart!
 
             // 1. Vehicle -> VehicleType ilişkisinde Restrict
@@ -71,6 +76,23 @@ namespace AccountService.Infrastructure.Context
                       .HasForeignKey(v => v.VehicleTypeId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
+
+
+             
+
+            modelBuilder.Entity<Cargo>()
+                .HasOne(c => c.PickupLocation)
+                .WithMany()
+                .HasForeignKey(c => c.PickupLocationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Cargo>()
+                .HasOne(c => c.DropoffLocation)
+                .WithMany()
+                .HasForeignKey(c => c.DropoffLocationId)
+                .OnDelete(DeleteBehavior.Restrict);
+        
+
 
             // 2. Tüm foreign key ilişkilerinde default olarak Restrict uygula
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
