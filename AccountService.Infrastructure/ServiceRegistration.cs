@@ -101,6 +101,7 @@ namespace AccountService.Infrastructure
             services.AddTransient<IVehicleSerivce, VehicleRepositoryAsync>();
             services.AddTransient<ILocationService, LocationRepositoryAsync>();
             services.AddTransient<ICargoService, CargoRepositoryAsync>();
+            services.AddTransient<IBookingService, BookingRepositoryAsync>();
             
             services.AddTransient<IDateTimeService, DateTimeService>();
 

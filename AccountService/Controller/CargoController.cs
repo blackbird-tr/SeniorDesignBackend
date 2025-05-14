@@ -57,7 +57,7 @@ namespace AccountService.WebApi.Controllers
         }
 
         [HttpPatch("{id}/status")]
-        public async Task<IActionResult> ChangeStatus(int id, [FromBody] byte status)
+        public async Task<IActionResult> ChangeStatus(int id,  byte status)
         {
             var result = await Mediator.Send(new ChangeCargoStatusCommand
             {
