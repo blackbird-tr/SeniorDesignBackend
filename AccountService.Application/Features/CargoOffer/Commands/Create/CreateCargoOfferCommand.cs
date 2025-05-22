@@ -3,7 +3,8 @@ using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
 using System;
 using System.Threading;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace AccountService.Application.Features.CargoOffer.Commands.Create
 {
@@ -20,14 +21,14 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
     public class CreateCargoOfferCommandHandler : IRequestHandler<CreateCargoOfferCommand, CargoOfferDto>
     {
         private readonly ICargoOfferService _cargoOfferService;
-        private readonly ICargoAdService _cargoAdService;
+        private readonly ICargoAdService _cargoAdService; 
 
         public CreateCargoOfferCommandHandler(
             ICargoOfferService cargoOfferService,
             ICargoAdService cargoAdService)
         {
             _cargoOfferService = cargoOfferService;
-            _cargoAdService = cargoAdService;
+            _cargoAdService = cargoAdService; 
         }
 
         public async Task<CargoOfferDto> Handle(CreateCargoOfferCommand request, CancellationToken cancellationToken)
@@ -47,6 +48,8 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
 
             if (request.Message.Length > 500)
                 throw new ArgumentException("Mesaj 500 karakterden uzun olamaz");
+
+            
 
             // Kargo ilanı için fiyat kontrolü
             var cargoAd = await _cargoAdService.GetByIdAsync(request.CargoAdId);
@@ -70,7 +73,8 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
                 CargoAdId = request.CargoAdId,
                 Price = request.Price,
                 Message = request.Message,
-                ExpiryDate = request.ExpiryDate
+                Status = Domain.Enums.OfferStatus.Pending,
+                ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7)
             };
 
             var createdOffer = await _cargoOfferService.AddAsync(offer);
@@ -78,12 +82,10 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
             return new CargoOfferDto
             {
                 Id = createdOffer.Id,
-                SenderId = createdOffer.SenderId,
-                SenderName = createdOffer.Sender.UserName,
-                ReceiverId = createdOffer.ReceiverId,
-                ReceiverName = createdOffer.Receiver.UserName,
+                SenderId = createdOffer.SenderId, 
+                ReceiverId = createdOffer.ReceiverId, 
                 CargoAdId = createdOffer.CargoAdId,
-                CargoAdTitle = createdOffer.CargoAd.Title,
+                CargoAdTitle = cargoAd.Title,
                 Price = createdOffer.Price,
                 Message = createdOffer.Message,
                 Status = createdOffer.Status.ToString(),

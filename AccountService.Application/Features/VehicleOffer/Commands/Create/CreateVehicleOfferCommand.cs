@@ -3,7 +3,8 @@ using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
 using System;
 using System.Threading;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace AccountService.Application.Features.VehicleOffer.Commands.Create
 {
@@ -19,14 +20,14 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
     public class CreateVehicleOfferCommandHandler : IRequestHandler<CreateVehicleOfferCommand, VehicleOfferDto>
     {
         private readonly IVehicleOfferService _vehicleOfferService;
-        private readonly IVehicleAdService _vehicleAdService;
+        private readonly IVehicleAdService _vehicleAdService; 
 
         public CreateVehicleOfferCommandHandler(
             IVehicleOfferService vehicleOfferService,
             IVehicleAdService vehicleAdService)
         {
             _vehicleOfferService = vehicleOfferService;
-            _vehicleAdService = vehicleAdService;
+            _vehicleAdService = vehicleAdService; 
         }
 
         public async Task<VehicleOfferDto> Handle(CreateVehicleOfferCommand request, CancellationToken cancellationToken)
@@ -43,7 +44,7 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
 
             if (request.Message.Length > 500)
                 throw new ArgumentException("Mesaj 500 karakterden uzun olamaz");
-
+             
             // Araç ilanı kontrolü
             var vehicleAd = await _vehicleAdService.GetByIdAsync(request.VehicleAdId);
             if (vehicleAd == null)
@@ -55,7 +56,8 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
                 ReceiverId = request.ReceiverId,
                 VehicleAdId = request.VehicleAdId,
                 Message = request.Message,
-                ExpiryDate = request.ExpiryDate
+                Status = Domain.Enums.OfferStatus.Pending,
+                ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7)
             };
 
             var createdOffer = await _vehicleOfferService.AddAsync(offer);
@@ -63,12 +65,10 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
             return new VehicleOfferDto
             {
                 Id = createdOffer.Id,
-                SenderId = createdOffer.SenderId,
-                SenderName = createdOffer.Sender.UserName,
-                ReceiverId = createdOffer.ReceiverId,
-                ReceiverName = createdOffer.Receiver.UserName,
+                SenderId = createdOffer.SenderId, 
+                ReceiverId = createdOffer.ReceiverId, 
                 VehicleAdId = createdOffer.VehicleAdId,
-                VehicleAdTitle = createdOffer.VehicleAd.Title,
+                VehicleAdTitle = vehicleAd.Title,
                 Message = createdOffer.Message,
                 Status = createdOffer.Status.ToString(),
                 ExpiryDate = createdOffer.ExpiryDate,
