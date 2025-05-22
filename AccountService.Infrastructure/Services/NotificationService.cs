@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace AccountService.Infrastructure.Services
 {
@@ -16,20 +17,27 @@ namespace AccountService.Infrastructure.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly UserManager<User> _userManager;
 
         public NotificationService(
             ApplicationDbContext context,
-            IHubContext<NotificationHub> hubContext)
+            IHubContext<NotificationHub> hubContext,
+            UserManager<User> userManager)
         {
             _context = context;
             _hubContext = hubContext;
+            _userManager = userManager;
         }
 
         public async Task<Notification> CreateNotificationAsync(string username, string title, string message, NotificationType type, int? relatedEntityId = null)
         {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                throw new Exception("User not found");
+
             var notification = new Notification
             {
-                UserId = username,
+                UserId = user.Id,
                 Title = title,
                 Message = message,
                 Type = type,
@@ -42,15 +50,19 @@ namespace AccountService.Infrastructure.Services
             await _context.SaveChangesAsync();
 
             // SignalR ile real-time bildirim gönder
-            await _hubContext.Clients.Group(username).SendAsync("ReceiveNotification", notification);
+            await _hubContext.Clients.Group(user.Id).SendAsync("ReceiveNotification", notification);
 
             return notification;
         }
 
         public async Task<List<NotificationDto>> GetUserNotificationsAsync(string username)
         {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                throw new Exception("User not found");
+
             return await _context.Notifications
-                .Where(n => n.UserId == username && n.Active)
+                .Where(n => n.UserId == user.Id && n.Active)
                 .OrderByDescending(n => n.CreatedDate)
                 .Select(n => new NotificationDto
                 {
@@ -77,8 +89,12 @@ namespace AccountService.Infrastructure.Services
 
         public async Task MarkAllAsReadAsync(string username)
         {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                throw new Exception("User not found");
+
             var notifications = await _context.Notifications
-                .Where(n => n.UserId == username && !n.IsRead && n.Active)
+                .Where(n => n.UserId == user.Id && !n.IsRead && n.Active)
                 .ToListAsync();
 
             foreach (var notification in notifications)
@@ -91,8 +107,12 @@ namespace AccountService.Infrastructure.Services
 
         public async Task<int> GetUnreadCountAsync(string username)
         {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                throw new Exception("User not found");
+
             return await _context.Notifications
-                .CountAsync(n => n.UserId == username && !n.IsRead && n.Active);
+                .CountAsync(n => n.UserId == user.Id && !n.IsRead && n.Active);
         }
     }
 } 

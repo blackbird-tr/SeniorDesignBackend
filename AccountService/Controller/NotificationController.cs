@@ -22,7 +22,7 @@ namespace AccountService.Controller
         [HttpGet]
         public async Task<IActionResult> GetUserNotifications()
         {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(username))
                 return Unauthorized();
 
@@ -33,7 +33,7 @@ namespace AccountService.Controller
         [HttpGet("unread-count")]
         public async Task<IActionResult> GetUnreadCount()
         {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(username))
                 return Unauthorized();
 
@@ -44,7 +44,7 @@ namespace AccountService.Controller
         [HttpPut("{id}/mark-as-read")]
         public async Task<IActionResult> MarkAsRead(int id)
         {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(username))
                 return Unauthorized();
 
@@ -55,7 +55,7 @@ namespace AccountService.Controller
         [HttpPut("mark-all-as-read")]
         public async Task<IActionResult> MarkAllAsRead()
         {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(username))
                 return Unauthorized();
 
