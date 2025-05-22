@@ -99,6 +99,8 @@ namespace AccountService.Infrastructure
             services.AddTransient<ILocationService, LocationRepositoryAsync>();
             services.AddTransient<IVehicleAdService, VehicleAdRepositoryAsync>();
             services.AddTransient<ICargoAdService, CargoAdRepository>();
+            services.AddTransient<ICargoOfferService, CargoOfferRepository>();
+            services.AddTransient<IVehicleOfferService, VehicleOfferRepository>(); 
             
             services.AddTransient<IDateTimeService, DateTimeService>();
 

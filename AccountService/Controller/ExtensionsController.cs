@@ -51,5 +51,26 @@ namespace AccountService.WebApi.Controllers
             var vehicleType = (VehicleType)key;
             return Ok(new KeyValuePair<int, string>(key, vehicleType.ToString()));
         }
+
+        [HttpGet("offer-statuses")]
+        public IActionResult GetOfferStatuses()
+        {
+            var offerStatuses = Enum.GetValues(typeof(OfferStatus))
+                .Cast<OfferStatus>()
+                .Select(os => new KeyValuePair<int, string>((int)os, os.ToString()))
+                .ToList();
+
+            return Ok(offerStatuses);
+        }
+
+        [HttpGet("offer-statuses/{key}")]
+        public IActionResult GetOfferStatusByKey(int key)
+        {
+            if (!Enum.IsDefined(typeof(OfferStatus), key))
+                return NotFound();
+
+            var offerStatus = (OfferStatus)key;
+            return Ok(new KeyValuePair<int, string>(key, offerStatus.ToString()));
+        }
     }
 } 

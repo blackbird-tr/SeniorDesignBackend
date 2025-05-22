@@ -351,6 +351,55 @@ namespace AccountService.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Offers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VehicleAdId = table.Column<int>(type: "int", nullable: true),
+                    CargoAdId = table.Column<int>(type: "int", nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Offers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Offers_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offers_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offers_CargoAds_CargoAdId",
+                        column: x => x.CargoAdId,
+                        principalTable: "CargoAds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offers_VehicleAds_VehicleAdId",
+                        column: x => x.VehicleAdId,
+                        principalTable: "VehicleAds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -421,6 +470,26 @@ namespace AccountService.Infrastructure.Migrations
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Offers_CargoAdId",
+                table: "Offers",
+                column: "CargoAdId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Offers_ReceiverId",
+                table: "Offers",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Offers_SenderId",
+                table: "Offers",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Offers_VehicleAdId",
+                table: "Offers",
+                column: "VehicleAdId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_UserID",
                 table: "RefreshTokens",
                 column: "UserID");
@@ -455,22 +524,25 @@ namespace AccountService.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CargoAds");
-
-            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "RefreshTokens");
+                name: "Offers");
 
             migrationBuilder.DropTable(
-                name: "VehicleAds");
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "CargoAds");
+
+            migrationBuilder.DropTable(
+                name: "VehicleAds");
 
             migrationBuilder.DropTable(
                 name: "Locations");

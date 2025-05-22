@@ -34,6 +34,8 @@ namespace AccountService.Infrastructure.Context
         public DbSet<Vehicle> Vehicles { get; set; } 
         public DbSet<VehicleAd> VehicleAds { get; set; } 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<VehicleOffer> VehicleOffers { get; set; }
+        public DbSet<CargoOffer> CargoOffers { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

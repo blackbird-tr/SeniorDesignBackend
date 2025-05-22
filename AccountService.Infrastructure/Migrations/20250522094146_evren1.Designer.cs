@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250522091429_evren1")]
+    [Migration("20250522094146_evren1")]
     partial class evren1
     {
         /// <inheritdoc />
@@ -189,6 +189,70 @@ namespace AccountService.Infrastructure.Migrations
                     b.HasIndex("UserId1");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("AccountService.Domain.Entities.Offer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("AddedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CargoAdId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VehicleAdId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CargoAdId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("VehicleAdId");
+
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("AccountService.Domain.Entities.RefreshToken", b =>
@@ -604,6 +668,39 @@ namespace AccountService.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AccountService.Domain.Entities.Offer", b =>
+                {
+                    b.HasOne("AccountService.Domain.Entities.CargoAd", "CargoAd")
+                        .WithMany()
+                        .HasForeignKey("CargoAdId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("AccountService.Domain.Entities.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AccountService.Domain.Entities.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AccountService.Domain.Entities.VehicleAd", "VehicleAd")
+                        .WithMany()
+                        .HasForeignKey("VehicleAdId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CargoAd");
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+
+                    b.Navigation("VehicleAd");
                 });
 
             modelBuilder.Entity("AccountService.Domain.Entities.RefreshToken", b =>
