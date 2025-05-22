@@ -23,11 +23,9 @@ namespace AccountService.Domain.Entities
         [MaxLength(100)]
         public string? CompanyName { get; set; }
 
-       
 
-        // Navigation properties
-        public Customer? Customer { get; set; }
-        public Carrier? Carrier { get; set; }
-        public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
+        public ICollection<Vehicle> Vehicles { get; set; }
+
+        public ICollection<CargoAd> Cargos { get; set; }  
     }
 }

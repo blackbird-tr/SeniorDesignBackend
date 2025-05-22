@@ -19,19 +19,14 @@ namespace AccountService.Infrastructure.Repositories
             _context = dbContext;
         }
 
-        public async Task<List<Vehicle>> GetByCarrierIdAsync(int carrierId)
+        public async Task<List<Vehicle>> GetByCarrierIdAsync(string UserId)
         {
             return await _context.Vehicles
-                .Where(v => v.CarrierId == carrierId && v.Active)
+                .Where(v => v.userId == UserId && v.Active)
                 .ToListAsync();
         }
 
-        public async Task<List<Vehicle>> GetAvailableVehiclesAsync()
-        {
-            return await _context.Vehicles
-                .Where(v => v.AvailabilityStatus && v.Active)
-                .ToListAsync();
-        }
+        
 
         public async Task<Vehicle?> GetByLicensePlateAsync(string licensePlate)
         {
@@ -39,11 +34,6 @@ namespace AccountService.Infrastructure.Repositories
                 .FirstOrDefaultAsync(v => v.LicensePlate == licensePlate && v.Active);
         }
 
-        public async Task<List<Vehicle>> GetByVehicleTypeIdAsync(int vehicleTypeId)
-        {
-            return await _context.Vehicles
-                .Where(v => v.VehicleTypeId == vehicleTypeId && v.Active)
-                .ToListAsync();
-        }
+     
     }
 }

@@ -7,11 +7,11 @@ namespace AccountService.Application.Features.Vehicle.Commands.UpdateVehicle
     public class UpdateVehicleCommand : IRequest<bool>
     {
         public int Id { get; set; }
-        public int CarrierId { get; set; }
-        public int VehicleTypeId { get; set; }
+        public string CarrierId { get; set; }
+        public string Title { get; set; }
+        public string VehicleType { get; set; }
         public float Capacity { get; set; }
         public string LicensePlate { get; set; }
-        public bool AvailabilityStatus { get; set; }
         public string? Model { get; set; }
     }
 
@@ -29,11 +29,10 @@ namespace AccountService.Application.Features.Vehicle.Commands.UpdateVehicle
             var vehicle = await _vehicleService.GetByIdAsync(request.Id);
             if (vehicle == null) return false;
 
-            vehicle.CarrierId = request.CarrierId;
-            vehicle.VehicleTypeId = request.VehicleTypeId;
+            vehicle.userId = request.CarrierId;
+            vehicle.VehicleType = request.VehicleType;
             vehicle.Capacity = request.Capacity;
             vehicle.LicensePlate = request.LicensePlate;
-            vehicle.AvailabilityStatus = request.AvailabilityStatus;
             vehicle.Model = request.Model;
 
             await _vehicleService.UpdateAsync(vehicle);

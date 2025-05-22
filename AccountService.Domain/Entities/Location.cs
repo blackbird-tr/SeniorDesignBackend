@@ -19,7 +19,7 @@ namespace AccountService.Domain.Entities
         public string? Coordinates { get; set; }
 
         // Navigation properties
-        public ICollection<Cargo> PickupLocations { get; set; }
-        public ICollection<Cargo> DropoffLocations { get; set; }
+        public ICollection<CargoAd> PickupLocations { get; set; }
+        public ICollection<CargoAd> DropoffLocations { get; set; }
     }
 }

@@ -7,16 +7,14 @@ namespace AccountService.Application.Features.Vehicle.Queries.GetAll
     public class VehicleDto
     {
         public int Id { get; set; }
-        public string LicensePlate { get; set; }
-        public bool AvailabilityStatus { get; set; }
+        public string LicensePlate { get; set; } 
         public float Capacity { get; set; }
         public string? Model { get; set; }
-
-        public int CarrierId { get; set; }
-        public int VehicleTypeId { get; set; }
+        public string  Title { get; set; }
+        public string CarrierId { get; set; } 
 
         public string? CarrierName { get; set; }        // Opsiyonel
-        public string? VehicleTypeName { get; set; }    // Opsiyonel
+        public string? VehicleType{ get; set; }    // Opsiyonel
     }
     public class GetAllVehiclesQuery : IRequest<List<VehicleDto>> { }
 
@@ -37,15 +35,14 @@ namespace AccountService.Application.Features.Vehicle.Queries.GetAll
                 .Where(x => x.Active)
                 .Select(vehicle => new VehicleDto
                 {
+                    Title = vehicle.Title,
                     Id = vehicle.Id,
-                    LicensePlate = vehicle.LicensePlate,
-                    AvailabilityStatus = vehicle.AvailabilityStatus,
+                    LicensePlate = vehicle.LicensePlate, 
                     Capacity = vehicle.Capacity,
                     Model = vehicle.Model,
-                    CarrierId = vehicle.CarrierId,
-                    VehicleTypeId = vehicle.VehicleTypeId,
-                    CarrierName = vehicle.Carrier?.User?.UserName,
-                    VehicleTypeName = vehicle.VehicleType?.Name
+                    CarrierId = vehicle.userId,
+                    VehicleType = vehicle.VehicleType,
+                    CarrierName = vehicle.Carrier.UserName,
                 })
                 .ToList();
         }

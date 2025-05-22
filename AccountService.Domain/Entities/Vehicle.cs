@@ -5,10 +5,11 @@ namespace AccountService.Domain.Entities
     public class Vehicle : BaseEntity
     {
         [Required]
-        public int CarrierId { get; set; }
+        public string userId { get; set; }
+        public string Title { get; set; }
 
         [Required]
-        public int VehicleTypeId { get; set; }
+        public string VehicleType { get; set; }
 
         [Required]
         public float Capacity { get; set; }
@@ -16,16 +17,12 @@ namespace AccountService.Domain.Entities
         [Required]
         [MaxLength(20)]
         public string LicensePlate { get; set; }
-
-        [Required]
-        public bool AvailabilityStatus { get; set; }
+         
 
         [MaxLength(100)]
         public string? Model { get; set; }
 
         // Navigation properties
-        public Carrier Carrier { get; set; }
-        public VehicleType VehicleType { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        public User Carrier { get; set; } 
     }
 }

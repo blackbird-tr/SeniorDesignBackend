@@ -27,14 +27,13 @@ namespace AccountService.Application.Features.Vehicle.Queries.GetById
             return new VehicleDto
             {
                 Id = vehicle.Id,
-                LicensePlate = vehicle.LicensePlate,
-                AvailabilityStatus = vehicle.AvailabilityStatus,
+                LicensePlate = vehicle.LicensePlate, 
                 Capacity = vehicle.Capacity,
                 Model = vehicle.Model,
-                CarrierId = vehicle.CarrierId,
-                VehicleTypeId = vehicle.VehicleTypeId,
-                CarrierName = vehicle.Carrier?.User?.UserName,
-                VehicleTypeName = vehicle.VehicleType?.Name
+                CarrierId = vehicle.userId,
+                VehicleType = vehicle.VehicleType,
+                CarrierName = vehicle.Carrier.UserName,
+                Title = vehicle.Title,
             };
         }
     }
