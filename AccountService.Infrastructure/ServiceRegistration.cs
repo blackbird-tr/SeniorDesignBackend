@@ -101,6 +101,7 @@ namespace AccountService.Infrastructure
             services.AddTransient<ICargoAdService, CargoAdRepository>();
             services.AddTransient<ICargoOfferService, CargoOfferRepository>();
             services.AddTransient<IVehicleOfferService, VehicleOfferRepository>(); 
+            services.AddTransient<INotificationService, NotificationService>();
             
             services.AddTransient<IDateTimeService, DateTimeService>();
 

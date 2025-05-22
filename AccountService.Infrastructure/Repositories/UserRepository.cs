@@ -243,6 +243,7 @@ namespace AccountService.Infrastructure.Repositories
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
                 new Claim("uid",user.Id),
                 new Claim("ip", ipAddress),
+                new Claim(ClaimTypes.Name, user.UserName)
             }.Union(userClaim);
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jWTSettings.Key));

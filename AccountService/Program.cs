@@ -1,8 +1,9 @@
 using AccountService.Application;
 using AccountService.Application.Interfaces;
 using AccountService.Infrastructure;
+using AccountService.Infrastructure.Hubs;
 using AccountService.Infrastructure.Services;
-using AccountService.WebApi.Extensions;
+using AccountService.WebApi.Extensions; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerExtension();
+
+// Add SignalR
+builder.Services.AddSignalR();
 
 builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
 builder.Services.AddApplicationLayer();
@@ -33,5 +37,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+// Map SignalR Hub
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

@@ -1,6 +1,7 @@
 using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
+using AccountService.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,14 +22,17 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
     public class CreateCargoOfferCommandHandler : IRequestHandler<CreateCargoOfferCommand, CargoOfferDto>
     {
         private readonly ICargoOfferService _cargoOfferService;
-        private readonly ICargoAdService _cargoAdService; 
+        private readonly ICargoAdService _cargoAdService;
+        private readonly INotificationService _notificationService;
 
         public CreateCargoOfferCommandHandler(
             ICargoOfferService cargoOfferService,
-            ICargoAdService cargoAdService)
+            ICargoAdService cargoAdService,
+            INotificationService notificationService)
         {
             _cargoOfferService = cargoOfferService;
-            _cargoAdService = cargoAdService; 
+            _cargoAdService = cargoAdService;
+            _notificationService = notificationService;
         }
 
         public async Task<CargoOfferDto> Handle(CreateCargoOfferCommand request, CancellationToken cancellationToken)
@@ -78,6 +82,15 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
             };
 
             var createdOffer = await _cargoOfferService.AddAsync(offer);
+
+            // Bildirim oluştur
+            await _notificationService.CreateNotificationAsync(
+                request.ReceiverId,
+                "Yeni Kargo Teklifi",
+                $"{cargoAd.Title} ilanınıza yeni bir teklif geldi.",
+                NotificationType.CargoOffer,
+                createdOffer.Id
+            );
 
             return new CargoOfferDto
             {
