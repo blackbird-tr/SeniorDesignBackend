@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AccountService.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class evren1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,11 +34,6 @@ namespace AccountService.Infrastructure.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     BirthYear = table.Column<int>(type: "int", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -79,25 +74,6 @@ namespace AccountService.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Locations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VehicleTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VehicleTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -207,57 +183,6 @@ namespace AccountService.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Carriers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LicenseNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AvailabilityStatus = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Carriers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Carriers_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Customers_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
                 {
@@ -311,16 +236,45 @@ namespace AccountService.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "VehicleAds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Desc = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PickUpLocationId = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VehicleType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Capacity = table.Column<float>(type: "real", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleAds", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VehicleAds_AspNetUsers_userId",
+                        column: x => x.userId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Vehicles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CarrierId = table.Column<int>(type: "int", nullable: false),
-                    VehicleTypeId = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VehicleType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Capacity = table.Column<float>(type: "real", nullable: false),
                     LicensePlate = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    AvailabilityStatus = table.Column<bool>(type: "bit", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -332,32 +286,28 @@ namespace AccountService.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Vehicles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Vehicles_Carriers_CarrierId",
-                        column: x => x.CarrierId,
-                        principalTable: "Carriers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Vehicles_VehicleTypes_VehicleTypeId",
-                        column: x => x.VehicleTypeId,
-                        principalTable: "VehicleTypes",
+                        name: "FK_Vehicles_AspNetUsers_userId",
+                        column: x => x.userId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cargos",
+                name: "CargoAds",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Weight = table.Column<float>(type: "real", nullable: true),
                     CargoType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     PickupLocationId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DropoffLocationId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsExpired = table.Column<bool>(type: "bit", nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: true),
                     LocationId1 = table.Column<int>(type: "int", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -368,148 +318,35 @@ namespace AccountService.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cargos", x => x.Id);
+                    table.PrimaryKey("PK_CargoAds", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Cargos_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
+                        name: "FK_CargoAds_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Cargos_Locations_DropoffLocationId",
+                        name: "FK_CargoAds_Locations_DropoffLocationId",
                         column: x => x.DropoffLocationId,
                         principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Cargos_Locations_LocationId",
+                        name: "FK_CargoAds_Locations_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Cargos_Locations_LocationId1",
+                        name: "FK_CargoAds_Locations_LocationId1",
                         column: x => x.LocationId1,
                         principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Cargos_Locations_PickupLocationId",
+                        name: "FK_CargoAds_Locations_PickupLocationId",
                         column: x => x.PickupLocationId,
                         principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bookings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    CarrierId = table.Column<int>(type: "int", nullable: false),
-                    VehicleId = table.Column<int>(type: "int", nullable: false),
-                    CargoId = table.Column<int>(type: "int", nullable: false),
-                    PickupDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DropoffDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TotalPrice = table.Column<float>(type: "real", nullable: true),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false),
-                    IsFuelIncluded = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Cargos_CargoId",
-                        column: x => x.CargoId,
-                        principalTable: "Cargos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Carriers_CarrierId",
-                        column: x => x.CarrierId,
-                        principalTable: "Carriers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Vehicles_VehicleId",
-                        column: x => x.VehicleId,
-                        principalTable: "Vehicles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Feedbacks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Rating = table.Column<float>(type: "real", nullable: true),
-                    Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Feedbacks_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Feedbacks_Bookings_BookingId",
-                        column: x => x.BookingId,
-                        principalTable: "Bookings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<float>(type: "real", nullable: true),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_Bookings_BookingId",
-                        column: x => x.BookingId,
-                        principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -554,71 +391,29 @@ namespace AccountService.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_CargoId",
-                table: "Bookings",
-                column: "CargoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_CarrierId",
-                table: "Bookings",
-                column: "CarrierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_CustomerId",
-                table: "Bookings",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_VehicleId",
-                table: "Bookings",
-                column: "VehicleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cargos_CustomerId",
-                table: "Cargos",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cargos_DropoffLocationId",
-                table: "Cargos",
+                name: "IX_CargoAds_DropoffLocationId",
+                table: "CargoAds",
                 column: "DropoffLocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cargos_LocationId",
-                table: "Cargos",
+                name: "IX_CargoAds_LocationId",
+                table: "CargoAds",
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cargos_LocationId1",
-                table: "Cargos",
+                name: "IX_CargoAds_LocationId1",
+                table: "CargoAds",
                 column: "LocationId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cargos_PickupLocationId",
-                table: "Cargos",
+                name: "IX_CargoAds_PickupLocationId",
+                table: "CargoAds",
                 column: "PickupLocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Carriers_UserId",
-                table: "Carriers",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_UserId",
-                table: "Customers",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_BookingId",
-                table: "Feedbacks",
-                column: "BookingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_UserId1",
-                table: "Feedbacks",
-                column: "UserId1");
+                name: "IX_CargoAds_UserId",
+                table: "CargoAds",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_UserId1",
@@ -626,25 +421,19 @@ namespace AccountService.Infrastructure.Migrations
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_BookingId",
-                table: "Payments",
-                column: "BookingId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_UserID",
                 table: "RefreshTokens",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vehicles_CarrierId",
-                table: "Vehicles",
-                column: "CarrierId");
+                name: "IX_VehicleAds_userId",
+                table: "VehicleAds",
+                column: "userId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vehicles_VehicleTypeId",
+                name: "IX_Vehicles_userId",
                 table: "Vehicles",
-                column: "VehicleTypeId");
+                column: "userId");
         }
 
         /// <inheritdoc />
@@ -666,40 +455,25 @@ namespace AccountService.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Feedbacks");
+                name: "CargoAds");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Payments");
-
-            migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Bookings");
-
-            migrationBuilder.DropTable(
-                name: "Cargos");
+                name: "VehicleAds");
 
             migrationBuilder.DropTable(
                 name: "Vehicles");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Locations");
-
-            migrationBuilder.DropTable(
-                name: "Carriers");
-
-            migrationBuilder.DropTable(
-                name: "VehicleTypes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

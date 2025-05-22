@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250513182933_initial")]
-    partial class initial
+    [Migration("20250522091429_evren1")]
+    partial class evren1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,71 +25,7 @@ namespace AccountService.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AccountService.Domain.Entities.Booking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AddedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CargoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CarrierId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DropoffDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsFuelIncluded")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("PickupDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
-                    b.Property<float?>("TotalPrice")
-                        .HasColumnType("real");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CargoId");
-
-                    b.HasIndex("CarrierId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Cargo", b =>
+            modelBuilder.Entity("AccountService.Domain.Entities.CargoAd", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,15 +47,15 @@ namespace AccountService.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("DropoffLocationId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsExpired")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LocationId")
                         .HasColumnType("int");
@@ -130,8 +66,12 @@ namespace AccountService.Infrastructure.Migrations
                     b.Property<int>("PickupLocationId")
                         .HasColumnType("int");
 
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -139,12 +79,14 @@ namespace AccountService.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<float?>("Weight")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("DropoffLocationId");
 
@@ -154,143 +96,9 @@ namespace AccountService.Infrastructure.Migrations
 
                     b.HasIndex("PickupLocationId");
 
-                    b.ToTable("Cargos");
-                });
+                    b.HasIndex("UserId");
 
-            modelBuilder.Entity("AccountService.Domain.Entities.Carrier", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AddedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("AvailabilityStatus")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LicenseNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Carriers");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AddedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AddedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<float?>("Rating")
-                        .HasColumnType("real");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Feedbacks");
+                    b.ToTable("CargoAds");
                 });
 
             modelBuilder.Entity("AccountService.Domain.Entities.Location", b =>
@@ -383,54 +191,6 @@ namespace AccountService.Infrastructure.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("AccountService.Domain.Entities.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AddedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float?>("Amount")
-                        .HasColumnType("real");
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentMethod")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId")
-                        .IsUnique();
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("AccountService.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -484,13 +244,6 @@ namespace AccountService.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AddedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("BirthYear")
                         .HasColumnType("int");
 
@@ -501,9 +254,6 @@ namespace AccountService.Infrastructure.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -551,12 +301,6 @@ namespace AccountService.Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -589,14 +333,8 @@ namespace AccountService.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("AvailabilityStatus")
-                        .HasColumnType("bit");
-
                     b.Property<float>("Capacity")
                         .HasColumnType("real");
-
-                    b.Property<int>("CarrierId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -610,25 +348,32 @@ namespace AccountService.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VehicleTypeId")
-                        .HasColumnType("int");
+                    b.Property<string>("VehicleType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CarrierId");
-
-                    b.HasIndex("VehicleTypeId");
+                    b.HasIndex("userId");
 
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("AccountService.Domain.Entities.VehicleType", b =>
+            modelBuilder.Entity("AccountService.Domain.Entities.VehicleAd", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -643,17 +388,22 @@ namespace AccountService.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<float>("Capacity")
+                        .HasColumnType("real");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Desc")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PickUpLocationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -661,9 +411,19 @@ namespace AccountService.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("VehicleType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleTypes");
+                    b.HasIndex("userId");
+
+                    b.ToTable("VehicleAds");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -799,49 +559,8 @@ namespace AccountService.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AccountService.Domain.Entities.Booking", b =>
+            modelBuilder.Entity("AccountService.Domain.Entities.CargoAd", b =>
                 {
-                    b.HasOne("AccountService.Domain.Entities.Cargo", "Cargo")
-                        .WithMany("Bookings")
-                        .HasForeignKey("CargoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AccountService.Domain.Entities.Carrier", "Carrier")
-                        .WithMany("Bookings")
-                        .HasForeignKey("CarrierId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AccountService.Domain.Entities.Customer", "Customer")
-                        .WithMany("Bookings")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AccountService.Domain.Entities.Vehicle", "Vehicle")
-                        .WithMany("Bookings")
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cargo");
-
-                    b.Navigation("Carrier");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Vehicle");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Cargo", b =>
-                {
-                    b.HasOne("AccountService.Domain.Entities.Customer", "Customer")
-                        .WithMany("Cargos")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("AccountService.Domain.Entities.Location", "DropoffLocation")
                         .WithMany()
                         .HasForeignKey("DropoffLocationId")
@@ -864,51 +583,17 @@ namespace AccountService.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("AccountService.Domain.Entities.User", "Customer")
+                        .WithMany("Cargos")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Customer");
 
                     b.Navigation("DropoffLocation");
 
                     b.Navigation("PickupLocation");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Carrier", b =>
-                {
-                    b.HasOne("AccountService.Domain.Entities.User", "User")
-                        .WithOne("Carrier")
-                        .HasForeignKey("AccountService.Domain.Entities.Carrier", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Customer", b =>
-                {
-                    b.HasOne("AccountService.Domain.Entities.User", "User")
-                        .WithOne("Customer")
-                        .HasForeignKey("AccountService.Domain.Entities.Customer", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Feedback", b =>
-                {
-                    b.HasOne("AccountService.Domain.Entities.Booking", "Booking")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AccountService.Domain.Entities.User", "User")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Booking");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AccountService.Domain.Entities.Notification", b =>
@@ -919,17 +604,6 @@ namespace AccountService.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Payment", b =>
-                {
-                    b.HasOne("AccountService.Domain.Entities.Booking", "Booking")
-                        .WithOne("Payment")
-                        .HasForeignKey("AccountService.Domain.Entities.Payment", "BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("AccountService.Domain.Entities.RefreshToken", b =>
@@ -945,21 +619,24 @@ namespace AccountService.Infrastructure.Migrations
 
             modelBuilder.Entity("AccountService.Domain.Entities.Vehicle", b =>
                 {
-                    b.HasOne("AccountService.Domain.Entities.Carrier", "Carrier")
+                    b.HasOne("AccountService.Domain.Entities.User", "Carrier")
                         .WithMany("Vehicles")
-                        .HasForeignKey("CarrierId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AccountService.Domain.Entities.VehicleType", "VehicleType")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("VehicleTypeId")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Carrier");
+                });
 
-                    b.Navigation("VehicleType");
+            modelBuilder.Entity("AccountService.Domain.Entities.VehicleAd", b =>
+                {
+                    b.HasOne("AccountService.Domain.Entities.User", "Carrier")
+                        .WithMany()
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Carrier");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1013,33 +690,6 @@ namespace AccountService.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AccountService.Domain.Entities.Booking", b =>
-                {
-                    b.Navigation("Feedbacks");
-
-                    b.Navigation("Payment")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Cargo", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Carrier", b =>
-                {
-                    b.Navigation("Bookings");
-
-                    b.Navigation("Vehicles");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Customer", b =>
-                {
-                    b.Navigation("Bookings");
-
-                    b.Navigation("Cargos");
-                });
-
             modelBuilder.Entity("AccountService.Domain.Entities.Location", b =>
                 {
                     b.Navigation("DropoffLocations");
@@ -1049,20 +699,8 @@ namespace AccountService.Infrastructure.Migrations
 
             modelBuilder.Entity("AccountService.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Carrier");
+                    b.Navigation("Cargos");
 
-                    b.Navigation("Customer");
-
-                    b.Navigation("Feedbacks");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.Vehicle", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("AccountService.Domain.Entities.VehicleType", b =>
-                {
                     b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
