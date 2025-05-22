@@ -7,7 +7,7 @@ namespace AccountService.Application.Features.Vehicle.Queries.GetByCarrierId
 {
     public class GetVehiclesByCarrierIdQuery : IRequest<List<VehicleDto>>
     {
-        public int CarrierId { get; set; }
+        public string CarrierId { get; set; }
     }
 
     public class GetVehiclesByCarrierIdQueryHandler : IRequestHandler<GetVehiclesByCarrierIdQuery, List<VehicleDto>>
@@ -26,12 +26,12 @@ namespace AccountService.Application.Features.Vehicle.Queries.GetByCarrierId
             return vehicles.Select(vehicle => new VehicleDto
             {
                 Id = vehicle.Id,
-                LicensePlate = vehicle.LicensePlate,
-                AvailabilityStatus = vehicle.AvailabilityStatus,
+                LicensePlate = vehicle.LicensePlate, 
                 Capacity = vehicle.Capacity,
                 Model = vehicle.Model,
-                CarrierId = vehicle.CarrierId,
-                VehicleTypeId = vehicle.VehicleTypeId
+                CarrierId = vehicle.userId,
+                VehicleType = vehicle.VehicleType,
+                Title = vehicle.Title,CarrierName = vehicle.Carrier.UserName,
             }).ToList();
         }
     }

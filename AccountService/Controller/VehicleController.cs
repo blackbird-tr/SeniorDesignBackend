@@ -5,10 +5,8 @@ using AccountService.Application.Features.Vehicle.Commands.UpdateVehicle;
 using AccountService.Application.Features.Vehicle.Commands.DeleteVehicle;
 using AccountService.Application.Features.Vehicle.Queries.GetAll;
 using AccountService.Application.Features.Vehicle.Queries.GetById;
-using AccountService.Application.Features.Vehicle.Queries.GetAvailable;
 using AccountService.Application.Features.Vehicle.Queries.GetByCarrierId;
 using AccountService.Application.Features.Vehicle.Queries.GetByLicensePlate;
-using AccountService.Application.Features.Vehicle.Queries.GetByVehicleTypeId;
 
 namespace AccountService.WebApi.Controllers
 {
@@ -56,14 +54,10 @@ namespace AccountService.WebApi.Controllers
             return result ? NoContent() : NotFound();
         }
 
-        [HttpGet("available")]
-        public async Task<IActionResult> GetAvailable()
-        {
-            return Ok(await Mediator.Send(new GetAvailableVehiclesQuery()));
-        }
+    
 
         [HttpGet("by-carrier/{carrierId}")]
-        public async Task<IActionResult> GetByCarrierId(int carrierId)
+        public async Task<IActionResult> GetByCarrierId(string carrierId)
         {
             return Ok(await Mediator.Send(new GetVehiclesByCarrierIdQuery { CarrierId = carrierId }));
         }
@@ -78,10 +72,6 @@ namespace AccountService.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("by-type/{vehicleTypeId}")]
-        public async Task<IActionResult> GetByVehicleTypeId(int vehicleTypeId)
-        {
-            return Ok(await Mediator.Send(new GetVehiclesByVehicleTypeIdQuery { VehicleTypeId = vehicleTypeId }));
-        }
+       
     }
 }

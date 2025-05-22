@@ -19,31 +19,33 @@ namespace AccountService.Infrastructure.Repositories
             _context = dbContext;
         }
 
-        public async Task<List<Vehicle>> GetByCarrierIdAsync(int carrierId)
+        public override async Task<Vehicle> GetByIdAsync(int id)
         {
             return await _context.Vehicles
-                .Where(v => v.CarrierId == carrierId && v.Active)
+                .Include(v => v.Carrier)
+                .FirstOrDefaultAsync(v => v.Id == id);
+        }
+
+        public override async Task<IReadOnlyList<Vehicle>> GetAllAsync()
+        {
+            return await _context.Vehicles
+                .Include(v => v.Carrier)
                 .ToListAsync();
         }
 
-        public async Task<List<Vehicle>> GetAvailableVehiclesAsync()
+        public async Task<List<Vehicle>> GetByCarrierIdAsync(string UserId)
         {
             return await _context.Vehicles
-                .Where(v => v.AvailabilityStatus && v.Active)
+                .Include(v => v.Carrier)
+                .Where(v => v.userId == UserId && v.Active)
                 .ToListAsync();
         }
 
         public async Task<Vehicle?> GetByLicensePlateAsync(string licensePlate)
         {
             return await _context.Vehicles
+                .Include(v => v.Carrier)
                 .FirstOrDefaultAsync(v => v.LicensePlate == licensePlate && v.Active);
-        }
-
-        public async Task<List<Vehicle>> GetByVehicleTypeIdAsync(int vehicleTypeId)
-        {
-            return await _context.Vehicles
-                .Where(v => v.VehicleTypeId == vehicleTypeId && v.Active)
-                .ToListAsync();
         }
     }
 }
