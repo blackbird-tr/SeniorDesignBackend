@@ -352,15 +352,55 @@ namespace AccountService.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Offers",
+                name: "VehicleOffers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    VehicleAdId = table.Column<int>(type: "int", nullable: true),
-                    CargoAdId = table.Column<int>(type: "int", nullable: true),
+                    VehicleAdId = table.Column<int>(type: "int", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleOffers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VehicleOffers_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VehicleOffers_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VehicleOffers_VehicleAds_VehicleAdId",
+                        column: x => x.VehicleAdId,
+                        principalTable: "VehicleAds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CargoOffers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CargoAdId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -373,29 +413,23 @@ namespace AccountService.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Offers", x => x.Id);
+                    table.PrimaryKey("PK_CargoOffers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Offers_AspNetUsers_ReceiverId",
+                        name: "FK_CargoOffers_AspNetUsers_ReceiverId",
                         column: x => x.ReceiverId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Offers_AspNetUsers_SenderId",
+                        name: "FK_CargoOffers_AspNetUsers_SenderId",
                         column: x => x.SenderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Offers_CargoAds_CargoAdId",
+                        name: "FK_CargoOffers_CargoAds_CargoAdId",
                         column: x => x.CargoAdId,
                         principalTable: "CargoAds",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Offers_VehicleAds_VehicleAdId",
-                        column: x => x.VehicleAdId,
-                        principalTable: "VehicleAds",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -465,29 +499,24 @@ namespace AccountService.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_UserId1",
-                table: "Notifications",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Offers_CargoAdId",
-                table: "Offers",
+                name: "IX_CargoOffers_CargoAdId",
+                table: "CargoOffers",
                 column: "CargoAdId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offers_ReceiverId",
-                table: "Offers",
+                name: "IX_CargoOffers_ReceiverId",
+                table: "CargoOffers",
                 column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offers_SenderId",
-                table: "Offers",
+                name: "IX_CargoOffers_SenderId",
+                table: "CargoOffers",
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offers_VehicleAdId",
-                table: "Offers",
-                column: "VehicleAdId");
+                name: "IX_Notifications_UserId1",
+                table: "Notifications",
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_UserID",
@@ -498,6 +527,21 @@ namespace AccountService.Infrastructure.Migrations
                 name: "IX_VehicleAds_userId",
                 table: "VehicleAds",
                 column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleOffers_ReceiverId",
+                table: "VehicleOffers",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleOffers_SenderId",
+                table: "VehicleOffers",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleOffers_VehicleAdId",
+                table: "VehicleOffers",
+                column: "VehicleAdId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehicles_userId",
@@ -524,13 +568,16 @@ namespace AccountService.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CargoOffers");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Offers");
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "RefreshTokens");
+                name: "VehicleOffers");
 
             migrationBuilder.DropTable(
                 name: "Vehicles");
