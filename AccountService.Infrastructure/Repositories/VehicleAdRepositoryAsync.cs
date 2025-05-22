@@ -14,9 +14,24 @@ namespace AccountService.Infrastructure.Repositories
             _context = dbContext;
         }
 
+        public override async Task<VehicleAd> GetByIdAsync(int id)
+        {
+            return await _context.VehicleAds
+                .Include(v => v.Carrier)
+                .FirstOrDefaultAsync(v => v.Id == id);
+        }
+
+        public override async Task<IReadOnlyList<VehicleAd>> GetAllAsync()
+        {
+            return await _context.VehicleAds
+                .Include(v => v.Carrier)
+                .ToListAsync();
+        }
+
         public async Task<List<VehicleAd>> GetByCarrierIdAsync(string UserId)
         {
             return await _context.VehicleAds
+                .Include(v => v.Carrier)
                 .Where(v => v.userId == UserId && v.Active)
                 .ToListAsync();
         }
@@ -24,6 +39,7 @@ namespace AccountService.Infrastructure.Repositories
         public async Task<List<VehicleAd>> GetByVehicleTypeAsync(string vehicleType)
         {
             return await _context.VehicleAds
+                .Include(v => v.Carrier)
                 .Where(v => v.VehicleType == vehicleType && v.Active)
                 .ToListAsync();
         }
@@ -31,6 +47,7 @@ namespace AccountService.Infrastructure.Repositories
         public async Task<List<VehicleAd>> GetByPickUpLocationAsync(int pickUpLocationId)
         {
             return await _context.VehicleAds
+                .Include(v => v.Carrier)
                 .Where(v => v.PickUpLocationId == pickUpLocationId && v.Active)
                 .ToListAsync();
         }

@@ -23,8 +23,6 @@ namespace AccountService.Infrastructure.Repositories
             return await _dbContext.Set<T>().FindAsync(id);
         }
 
-
-
         public async Task<T> AddAsync(T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
@@ -44,7 +42,7 @@ namespace AccountService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+        public virtual async Task<IReadOnlyList<T>> GetAllAsync()
         {
             return await _dbContext
                  .Set<T>()

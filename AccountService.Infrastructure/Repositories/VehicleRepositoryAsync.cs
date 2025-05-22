@@ -19,21 +19,33 @@ namespace AccountService.Infrastructure.Repositories
             _context = dbContext;
         }
 
+        public override async Task<Vehicle> GetByIdAsync(int id)
+        {
+            return await _context.Vehicles
+                .Include(v => v.Carrier)
+                .FirstOrDefaultAsync(v => v.Id == id);
+        }
+
+        public override async Task<IReadOnlyList<Vehicle>> GetAllAsync()
+        {
+            return await _context.Vehicles
+                .Include(v => v.Carrier)
+                .ToListAsync();
+        }
+
         public async Task<List<Vehicle>> GetByCarrierIdAsync(string UserId)
         {
             return await _context.Vehicles
+                .Include(v => v.Carrier)
                 .Where(v => v.userId == UserId && v.Active)
                 .ToListAsync();
         }
 
-        
-
         public async Task<Vehicle?> GetByLicensePlateAsync(string licensePlate)
         {
             return await _context.Vehicles
+                .Include(v => v.Carrier)
                 .FirstOrDefaultAsync(v => v.LicensePlate == licensePlate && v.Active);
         }
-
-     
     }
 }

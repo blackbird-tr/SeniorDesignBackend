@@ -14,9 +14,30 @@ namespace AccountService.Infrastructure.Repositories
             _context = context;
         }
 
+        public override async Task<CargoAd> GetByIdAsync(int id)
+        {
+            return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Include(c => c.PickupLocation)
+                .Include(c => c.DropoffLocation)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public override async Task<IReadOnlyList<CargoAd>> GetAllAsync()
+        {
+            return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Include(c => c.PickupLocation)
+                .Include(c => c.DropoffLocation)
+                .ToListAsync();
+        }
+
         public async Task<List<CargoAd>> GetByCustomerIdAsync(string UserId)
         {
             return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Include(c => c.PickupLocation)
+                .Include(c => c.DropoffLocation)
                 .Where(c => c.UserId == UserId)
                 .ToListAsync();
         }
@@ -24,6 +45,9 @@ namespace AccountService.Infrastructure.Repositories
         public async Task<List<CargoAd>> GetByPickupLocationAsync(int pickupLocationId)
         {
             return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Include(c => c.PickupLocation)
+                .Include(c => c.DropoffLocation)
                 .Where(c => c.PickupLocationId == pickupLocationId)
                 .ToListAsync();
         }
@@ -31,6 +55,9 @@ namespace AccountService.Infrastructure.Repositories
         public async Task<List<CargoAd>> GetByDropoffLocationAsync(int dropoffLocationId)
         {
             return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Include(c => c.PickupLocation)
+                .Include(c => c.DropoffLocation)
                 .Where(c => c.DropoffLocationId == dropoffLocationId)
                 .ToListAsync();
         }
@@ -38,6 +65,9 @@ namespace AccountService.Infrastructure.Repositories
         public async Task<List<CargoAd>> GetByCargoTypeAsync(string cargoType)
         {
             return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Include(c => c.PickupLocation)
+                .Include(c => c.DropoffLocation)
                 .Where(c => c.CargoType == cargoType)
                 .ToListAsync();
         }
