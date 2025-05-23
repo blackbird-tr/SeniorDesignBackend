@@ -95,8 +95,7 @@ namespace AccountService.Infrastructure
             services.AddSingleton<JwtSecurityTokenHandler>();
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IUserRepository, UserRepository>(); 
-            services.AddTransient<IVehicleSerivce, VehicleRepositoryAsync>();
-            services.AddTransient<ILocationService, LocationRepositoryAsync>();
+            services.AddTransient<IVehicleSerivce, VehicleRepositoryAsync>(); 
             services.AddTransient<IVehicleAdService, VehicleAdRepositoryAsync>();
             services.AddTransient<ICargoAdService, CargoAdRepository>();
             services.AddTransient<ICargoOfferService, CargoOfferRepository>();

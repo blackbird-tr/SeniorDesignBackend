@@ -11,8 +11,11 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
         public string Description { get; set; }
         public float? Weight { get; set; }
         public string CargoType { get; set; }
-        public int PickupLocationId { get; set; }
-        public int DropoffLocationId { get; set; }
+        public string DropCountry { get; set; }
+        public string DropCity { get; set; }
+        public string PickCountry { get; set; }
+        public string PickCity { get; set; }
+        public string currency  { get; set; }
         public decimal Price { get; set; }
     }
 
@@ -34,8 +37,11 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
                 Description = request.Description,
                 Weight = request.Weight,
                 CargoType = request.CargoType,
-                PickupLocationId = request.PickupLocationId,
-                DropoffLocationId = request.DropoffLocationId,
+                currency = request.currency,
+                DropCity = request.DropCity,
+                DropCountry = request.DropCountry,
+                PickCity = request.PickCity,
+                PickCountry = request.PickCountry,
                 Price = request.Price,
                 IsExpired = false
             };
@@ -50,8 +56,11 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
                 Description = createdAd.Description,
                 Weight = createdAd.Weight,
                 CargoType = createdAd.CargoType,
-                PickupLocationId = createdAd.PickupLocationId,
-                DropoffLocationId = createdAd.DropoffLocationId,
+                DropCity = createdAd.DropCity,
+                DropCountry = createdAd.DropCountry,
+                PickCity = createdAd.PickCity,
+                PickCountry = createdAd.PickCountry,
+                currency = createdAd.currency,
                 Price = createdAd.Price,
                 IsExpired = createdAd.IsExpired,
                 CreatedDate = createdAd.CreatedDate

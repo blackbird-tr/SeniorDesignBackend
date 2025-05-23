@@ -44,12 +44,6 @@ namespace AccountService.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<VehicleAd>> GetByPickUpLocationAsync(int pickUpLocationId)
-        {
-            return await _context.VehicleAds
-                .Include(v => v.Carrier)
-                .Where(v => v.PickUpLocationId == pickUpLocationId && v.Active)
-                .ToListAsync();
-        }
+        
     }
 } 

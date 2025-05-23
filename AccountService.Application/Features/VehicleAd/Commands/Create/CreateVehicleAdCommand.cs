@@ -9,7 +9,8 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public int PickUpLocationId { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
         public string CarrierId { get; set; }
         public string VehicleType { get; set; }
         public float Capacity { get; set; }
@@ -30,7 +31,9 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
             {
                 Title = request.Title,
                 Desc = request.Description,
-                PickUpLocationId = request.PickUpLocationId,
+                Country = request.Country,
+                City = request.City,
+
                 userId = request.CarrierId,
                 VehicleType = request.VehicleType,
                 Capacity = request.Capacity
@@ -42,10 +45,11 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
             {
                 Id = createdAd.Id,
                 Title = createdAd.Title,
-                Description = createdAd.Desc,
-                PickUpLocationId = createdAd.PickUpLocationId,
+                Description = createdAd.Desc, 
                 CarrierId = createdAd.userId,
                 VehicleType = createdAd.VehicleType,
+                Country = createdAd.Country,
+                City = createdAd.City,
                 Capacity = createdAd.Capacity,
                 CreatedDate = createdAd.CreatedDate
             };

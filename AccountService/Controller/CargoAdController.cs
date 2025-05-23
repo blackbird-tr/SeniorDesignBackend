@@ -6,9 +6,7 @@ using AccountService.Application.Features.CargoAd.Commands.Delete;
 using AccountService.Application.Features.CargoAd.Queries.GetAll;
 using AccountService.Application.Features.CargoAd.Queries.GetById;
 using AccountService.Application.Features.CargoAd.Queries.GetByCustomerId;
-using AccountService.Application.Features.CargoAd.Queries.GetByCargoType;
-using AccountService.Application.Features.CargoAd.Queries.GetByPickupLocation;
-using AccountService.Application.Features.CargoAd.Queries.GetByDropoffLocation;
+using AccountService.Application.Features.CargoAd.Queries.GetByCargoType; 
 
 namespace AccountService.WebApi.Controllers
 {
@@ -68,16 +66,6 @@ namespace AccountService.WebApi.Controllers
             return Ok(await Mediator.Send(new GetCargoAdsByCargoTypeQuery { CargoType = cargoType }));
         }
 
-        [HttpGet("by-pickup/{pickupLocationId}")]
-        public async Task<IActionResult> GetByPickupLocation(int pickupLocationId)
-        {
-            return Ok(await Mediator.Send(new GetCargoAdsByPickupLocationQuery { PickupLocationId = pickupLocationId }));
-        }
-
-        [HttpGet("by-dropoff/{dropoffLocationId}")]
-        public async Task<IActionResult> GetByDropoffLocation(int dropoffLocationId)
-        {
-            return Ok(await Mediator.Send(new GetCargoAdsByDropoffLocationQuery { DropoffLocationId = dropoffLocationId }));
-        }
+         
     }
 } 

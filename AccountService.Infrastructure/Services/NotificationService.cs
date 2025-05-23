@@ -29,9 +29,9 @@ namespace AccountService.Infrastructure.Services
             _userManager = userManager;
         }
 
-        public async Task<Notification> CreateNotificationAsync(string username, string title, string message, NotificationType type, int? relatedEntityId = null)
+        public async Task<Notification> CreateNotificationAsync(string userId, string title, string message, NotificationType type, int? relatedEntityId = null)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 throw new Exception("User not found");
 
@@ -43,17 +43,20 @@ namespace AccountService.Infrastructure.Services
                 Type = type,
                 RelatedEntityId = relatedEntityId,
                 IsRead = false,
-                Active = true
+                Active = true,
+                CreatedDate = DateTime.UtcNow
             };
 
             await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
 
-            // SignalR ile real-time bildirim gönder
-            await _hubContext.Clients.Client().SendAsync("ReceiveNotification", notification);
+            // SignalR ile kullanıcıya özel real-time bildirim gönder
+            await _hubContext.Clients.User(user.Id).SendAsync("ReceiveNotification", notification);
 
             return notification;
         }
+
+
 
         public async Task<List<NotificationDto>> GetUserNotificationsAsync(string username)
         {

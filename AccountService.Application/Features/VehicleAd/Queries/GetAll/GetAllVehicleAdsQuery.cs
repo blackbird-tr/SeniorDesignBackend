@@ -24,9 +24,11 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetAll
                 {
                     Id = ad.Id,
                     Title = ad.Title,
-                    Description = ad.Desc,
-                    PickUpLocationId = ad.PickUpLocationId,
+                    Description = ad.Desc,  
+                    City = ad.City,
+                    Country=ad.Country,
                     CarrierId = ad.userId,
+                    
                     CarrierName = ad.Carrier.UserName,
                     VehicleType = ad.VehicleType,
                     Capacity = ad.Capacity,

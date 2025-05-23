@@ -1,13 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using AccountService.WebApi.Controller;
 using AccountService.Application.Features.VehicleAd.Commands.Create;
-using AccountService.Application.Features.VehicleAd.Commands.Update;
 using AccountService.Application.Features.VehicleAd.Commands.Delete;
+using AccountService.Application.Features.VehicleAd.Commands.Update;
 using AccountService.Application.Features.VehicleAd.Queries.GetAll;
-using AccountService.Application.Features.VehicleAd.Queries.GetById;
 using AccountService.Application.Features.VehicleAd.Queries.GetByCarrierId;
+using AccountService.Application.Features.VehicleAd.Queries.GetById;
 using AccountService.Application.Features.VehicleAd.Queries.GetByVehicleType;
-using AccountService.Application.Features.VehicleAd.Queries.GetByPickUpLocation;
+using AccountService.WebApi.Controller;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AccountService.WebApi.Controllers
 {
@@ -66,11 +65,6 @@ namespace AccountService.WebApi.Controllers
         {
             return Ok(await Mediator.Send(new GetVehicleAdsByVehicleTypeQuery { VehicleType = vehicleType }));
         }
-
-        [HttpGet("by-location/{pickUpLocationId}")]
-        public async Task<IActionResult> GetByPickUpLocation(int pickUpLocationId)
-        {
-            return Ok(await Mediator.Send(new GetVehicleAdsByPickUpLocationQuery { PickUpLocationId = pickUpLocationId }));
-        }
+         
     }
 } 

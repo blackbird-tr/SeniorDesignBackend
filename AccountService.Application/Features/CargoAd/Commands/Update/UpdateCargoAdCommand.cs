@@ -10,11 +10,14 @@ namespace AccountService.Application.Features.CargoAd.Commands.Update
         public string Title { get; set; }
         public string Description { get; set; }
         public float? Weight { get; set; }
-        public string CargoType { get; set; }
-        public int PickupLocationId { get; set; }
-        public int DropoffLocationId { get; set; }
+        public string CargoType { get; set; } 
         public decimal Price { get; set; }
         public bool IsExpired { get; set; }
+        public string DropCountry { get; set; }
+        public string DropCity { get; set; }
+        public string PickCountry { get; set; }
+        public string PickCity { get; set; }
+        public string currency { get; set; }
     }
 
     public class UpdateCargoAdCommandHandler : IRequestHandler<UpdateCargoAdCommand, bool>
@@ -35,8 +38,11 @@ namespace AccountService.Application.Features.CargoAd.Commands.Update
             cargoAd.Description = request.Description;
             cargoAd.Weight = request.Weight;
             cargoAd.CargoType = request.CargoType;
-            cargoAd.PickupLocationId = request.PickupLocationId;
-            cargoAd.DropoffLocationId = request.DropoffLocationId;
+            cargoAd.currency = request.currency;
+            cargoAd.DropCity = request.DropCity;
+            cargoAd.DropCountry = request.DropCountry;
+            cargoAd.PickCity = request.PickCity;
+            cargoAd.PickCountry = request.PickCountry;
             cargoAd.Price = request.Price;
             cargoAd.IsExpired = request.IsExpired;
 

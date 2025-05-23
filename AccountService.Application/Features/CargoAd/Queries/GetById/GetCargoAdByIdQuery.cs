@@ -31,10 +31,12 @@ namespace AccountService.Application.Features.CargoAd.Queries.GetById
                 Description = cargoAd.Description,
                 Weight = cargoAd.Weight,
                 CargoType = cargoAd.CargoType,
-                PickupLocationId = cargoAd.PickupLocationId,
-                PickupLocationAddress = cargoAd.PickupLocation.Address,
-                DropoffLocationId = cargoAd.DropoffLocationId,
-                DropoffLocationAddress = cargoAd.DropoffLocation.Address,
+                DropCity = cargoAd.DropCity,
+                DropCountry = cargoAd.DropCountry,
+                PickCity = cargoAd.PickCity,
+                    PickCountry = cargoAd.PickCountry,
+                currency = cargoAd.currency,
+                 
                 Price = cargoAd.Price,
                 IsExpired = cargoAd.IsExpired,
                 CreatedDate = cargoAd.CreatedDate

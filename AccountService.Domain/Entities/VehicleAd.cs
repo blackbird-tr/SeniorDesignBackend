@@ -11,10 +11,11 @@ namespace AccountService.Domain.Entities
     { 
 
         public string   Title   { get; set; }
-        public string Desc { get; set; }
-        public int PickUpLocationId { get; set; }
+        public string Desc { get; set; } 
         [Required]
-        public string userId { get; set; } 
+        public string userId { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
 
         [Required]
         public string VehicleType { get; set; }

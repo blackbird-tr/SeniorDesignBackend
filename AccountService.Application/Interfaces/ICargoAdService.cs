@@ -4,9 +4,7 @@ namespace AccountService.Application.Interfaces
 {
     public interface ICargoAdService : IGenericRepository<Domain.Entities.CargoAd>
     {
-        Task<List<CargoAd>> GetByCustomerIdAsync(string UserId);
-        Task<List<CargoAd>> GetByPickupLocationAsync(int pickupLocationId);
-        Task<List<CargoAd>> GetByDropoffLocationAsync(int dropoffLocationId);
+        Task<List<CargoAd>> GetByCustomerIdAsync(string UserId); 
         Task<List<CargoAd>> GetByCargoTypeAsync(string cargoType);
     }
 } 

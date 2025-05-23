@@ -28,8 +28,7 @@ namespace AccountService.Infrastructure.Context
         // DbSet Properties
         public DbSet<User> Users { get; set; }
         
-        public DbSet<CargoAd> CargoAds { get; set; } 
-        public DbSet<Location> Locations { get; set; }
+        public DbSet<CargoAd> CargoAds { get; set; }  
         public DbSet<Notification> Notifications { get; set; } 
         public DbSet<Vehicle> Vehicles { get; set; } 
         public DbSet<VehicleAd> VehicleAds { get; set; } 
@@ -70,17 +69,7 @@ namespace AccountService.Infrastructure.Context
 
              
 
-            modelBuilder.Entity<CargoAd>()
-                .HasOne(c => c.PickupLocation)
-                .WithMany()
-                .HasForeignKey(c => c.PickupLocationId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CargoAd>()
-                .HasOne(c => c.DropoffLocation)
-                .WithMany()
-                .HasForeignKey(c => c.DropoffLocationId)
-                .OnDelete(DeleteBehavior.Restrict);
+          
         
 
 
