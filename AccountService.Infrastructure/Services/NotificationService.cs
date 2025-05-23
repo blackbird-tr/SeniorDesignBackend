@@ -50,7 +50,7 @@ namespace AccountService.Infrastructure.Services
             await _context.SaveChangesAsync();
 
             // SignalR ile real-time bildirim gönder
-            await _hubContext.Clients.Group(user.Id).SendAsync("ReceiveNotification", notification);
+            await _hubContext.Clients.Client().SendAsync("ReceiveNotification", notification);
 
             return notification;
         }
