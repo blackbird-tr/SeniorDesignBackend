@@ -10,7 +10,7 @@ namespace AccountService.Domain.Entities
         public string ReceiverId { get; set; }  // Teklif alan kullanıcı
         public int VehicleAdId { get; set; }  // Araç ilanına verilen teklif
         public string Message { get; set; }    // Teklif mesajı
-        public OfferStatus Status { get; set; } = OfferStatus.Pending;  // Teklif durumu
+        public string Status { get; set; }   // Teklif durumu
         public DateTime? ExpiryDate { get; set; }  // Teklifin geçerlilik süresi
 
         // Navigation properties

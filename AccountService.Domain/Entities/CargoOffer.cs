@@ -11,7 +11,7 @@ namespace AccountService.Domain.Entities
         public int CargoAdId { get; set; }    // Kargo ilanına verilen teklif
         public decimal Price { get; set; }     // Teklif edilen fiyat
         public string Message { get; set; }    // Teklif mesajı
-        public OfferStatus Status { get; set; } = OfferStatus.Pending;  // Teklif durumu
+        public string Status { get; set; }   // Teklif durumu
         public DateTime? ExpiryDate { get; set; }  // Teklifin geçerlilik süresi
 
         // Navigation properties

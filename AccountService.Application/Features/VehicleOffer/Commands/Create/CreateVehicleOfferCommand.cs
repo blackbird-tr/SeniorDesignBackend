@@ -60,7 +60,7 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
                 ReceiverId = request.ReceiverId,
                 VehicleAdId = request.VehicleAdId,
                 Message = request.Message,
-                Status = Domain.Enums.OfferStatus.Pending,
+                Status = OfferStatus.Pending.ToString(),
                 ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7)
             };
 

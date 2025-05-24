@@ -77,7 +77,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
                 CargoAdId = request.CargoAdId,
                 Price = request.Price,
                 Message = request.Message,
-                Status = Domain.Enums.OfferStatus.Pending,
+                Status = OfferStatus.Pending.ToString(),
                 ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7)
             };
 

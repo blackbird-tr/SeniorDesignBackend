@@ -10,7 +10,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.UpdateStatus
     public class UpdateCargoOfferStatusCommand : IRequest<bool>
     {
         public int OfferId { get; set; }
-        public OfferStatus Status { get; set; }
+        public string Status { get; set; }
     }
 
     public class UpdateCargoOfferStatusCommandHandler : IRequestHandler<UpdateCargoOfferStatusCommand, bool>
@@ -41,7 +41,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.UpdateStatus
 
                 switch (request.Status)
                 {
-                    case OfferStatus.Accepted:
+                    case "Accepted":
                         message = $"{offer.CargoAd.Title} ilanına verdiğiniz teklif kabul edildi.";
                         await _notificationService.CreateNotificationAsync(
                             offer.SenderId,
@@ -52,7 +52,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.UpdateStatus
                         );
                         break;
 
-                    case OfferStatus.Rejected:
+                    case "Rejected":
                         message = $"{offer.CargoAd.Title} ilanına verdiğiniz teklif reddedildi.";
                         await _notificationService.CreateNotificationAsync(
                             offer.SenderId,
@@ -63,7 +63,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.UpdateStatus
                         );
                         break;
 
-                    case OfferStatus.Cancelled:
+                    case "Cancelled":
                         message = $"{offer.CargoAd.Title} ilanına verilen teklif iptal edildi.";
                         // Hem gönderen hem alıcıya bildirim gönder
                         await _notificationService.CreateNotificationAsync(

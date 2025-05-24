@@ -73,17 +73,19 @@ namespace AccountService.Infrastructure.Repositories
                 .Include(o => o.Receiver)
                 .Include(o => o.VehicleAd)
                 .Where(o => (o.SenderId == userId || o.ReceiverId == userId) 
-                    && o.Status == OfferStatus.Pending 
+                    && o.Status == OfferStatus.Pending.ToString() 
                     && o.Active)
                 .ToListAsync();
         }
 
-        public async Task<bool> UpdateOfferStatusAsync(int offerId, OfferStatus status)
+        public async Task<bool> UpdateOfferStatusAsync(int offerId, string status)
         {
             var offer = await GetByIdAsync(offerId);
             if (offer == null) return false;
 
-            offer.Status = status;
+            offer.Status =status;
+
+            _context.Update(offer);
             await _context.SaveChangesAsync();
             return true;
         }

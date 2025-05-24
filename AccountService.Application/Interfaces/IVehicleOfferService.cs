@@ -11,6 +11,6 @@ namespace AccountService.Application.Interfaces
         Task<List<VehicleOffer>> GetByReceiverIdAsync(string receiverId);
         Task<List<VehicleOffer>> GetByVehicleAdIdAsync(int vehicleAdId);
         Task<List<VehicleOffer>> GetPendingOffersAsync(string userId);
-        Task<bool> UpdateOfferStatusAsync(int offerId, OfferStatus status);
+        Task<bool> UpdateOfferStatusAsync(int offerId, string status);
     }
 } 
