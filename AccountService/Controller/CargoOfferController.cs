@@ -2,7 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using AccountService.WebApi.Controller;
 using AccountService.Application.Features.CargoOffer.Commands.Create;
 using AccountService.Application.Features.CargoOffer.Commands.UpdateStatus;
-using AccountService.Application.Interfaces;
+using AccountService.Application.Features.CargoOffer.Queries.GetAll;
+using AccountService.Application.Features.CargoOffer.Queries.GetById;
+using AccountService.Application.Features.CargoOffer.Queries.GetBySenderId;
+using AccountService.Application.Features.CargoOffer.Queries.GetByReceiverId;
+using AccountService.Application.Features.CargoOffer.Queries.GetByCargoAdId;
+using AccountService.Application.Features.CargoOffer.Queries.GetPending;
 using System;
 using System.Threading.Tasks;
 
@@ -12,13 +17,6 @@ namespace AccountService.WebApi.Controllers
     [Route("api/[controller]")]
     public class CargoOfferController : BaseApiController
     {
-        private readonly ICargoOfferService _cargoOfferService;
-
-        public CargoOfferController(ICargoOfferService cargoOfferService)
-        {
-            _cargoOfferService = cargoOfferService;
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCargoOfferCommand command)
         {
@@ -46,46 +44,46 @@ namespace AccountService.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var offers = await _cargoOfferService.GetAllAsync();
-            return Ok(offers);
+            var result = await Mediator.Send(new GetAllCargoOffersQuery());
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var offer = await _cargoOfferService.GetByIdAsync(id);
-            if (offer == null)
+            var result = await Mediator.Send(new GetCargoOfferByIdQuery { Id = id });
+            if (result == null)
                 return NotFound();
 
-            return Ok(offer);
+            return Ok(result);
         }
 
         [HttpGet("sender/{senderId}")]
         public async Task<IActionResult> GetBySenderId(string senderId)
         {
-            var offers = await _cargoOfferService.GetBySenderIdAsync(senderId);
-            return Ok(offers);
+            var result = await Mediator.Send(new GetCargoOffersBySenderIdQuery { SenderId = senderId });
+            return Ok(result);
         }
 
         [HttpGet("receiver/{receiverId}")]
         public async Task<IActionResult> GetByReceiverId(string receiverId)
         {
-            var offers = await _cargoOfferService.GetByReceiverIdAsync(receiverId);
-            return Ok(offers);
+            var result = await Mediator.Send(new GetCargoOffersByReceiverIdQuery { ReceiverId = receiverId });
+            return Ok(result);
         }
 
         [HttpGet("cargo-ad/{cargoAdId}")]
         public async Task<IActionResult> GetByCargoAdId(int cargoAdId)
         {
-            var offers = await _cargoOfferService.GetByCargoAdIdAsync(cargoAdId);
-            return Ok(offers);
+            var result = await Mediator.Send(new GetCargoOffersByCargoAdIdQuery { CargoAdId = cargoAdId });
+            return Ok(result);
         }
 
         [HttpGet("pending/{userId}")]
         public async Task<IActionResult> GetPendingOffers(string userId)
         {
-            var offers = await _cargoOfferService.GetPendingOffersAsync(userId);
-            return Ok(offers);
+            var result = await Mediator.Send(new GetPendingCargoOffersQuery { UserId = userId });
+            return Ok(result);
         }
     }
 } 
