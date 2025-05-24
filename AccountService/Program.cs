@@ -42,7 +42,7 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 
-
+app.UseCors("AllowAllOrigins");
 
 app.UseSwagger();
     app.UseSwaggerUI();
