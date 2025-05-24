@@ -2,7 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using AccountService.WebApi.Controller;
 using AccountService.Application.Features.VehicleOffer.Commands.Create;
 using AccountService.Application.Features.VehicleOffer.Commands.UpdateStatus;
-using AccountService.Application.Interfaces;
+using AccountService.Application.Features.VehicleOffer.Queries.GetAll;
+using AccountService.Application.Features.VehicleOffer.Queries.GetById;
+using AccountService.Application.Features.VehicleOffer.Queries.GetBySenderId;
+using AccountService.Application.Features.VehicleOffer.Queries.GetByReceiverId;
+using AccountService.Application.Features.VehicleOffer.Queries.GetByVehicleAdId;
+using AccountService.Application.Features.VehicleOffer.Queries.GetPending;
 using System;
 using System.Threading.Tasks;
 
@@ -12,13 +17,6 @@ namespace AccountService.WebApi.Controllers
     [Route("api/[controller]")]
     public class VehicleOfferController : BaseApiController
     {
-        private readonly IVehicleOfferService _vehicleOfferService;
-
-        public VehicleOfferController(IVehicleOfferService vehicleOfferService)
-        {
-            _vehicleOfferService = vehicleOfferService;
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateVehicleOfferCommand command)
         {
@@ -46,46 +44,49 @@ namespace AccountService.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var offers = await _vehicleOfferService.GetAllAsync();
-            return Ok(offers);
+            var query = new GetAllVehicleOffersQuery();
+            var result = await Mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var offer = await _vehicleOfferService.GetByIdAsync(id);
-            if (offer == null)
-                return NotFound();
-
-            return Ok(offer);
+            var query = new GetVehicleOfferByIdQuery { Id = id };
+            var result = await Mediator.Send(query);
+            return result == null ? NotFound() : Ok(result);
         }
 
         [HttpGet("sender/{senderId}")]
         public async Task<IActionResult> GetBySenderId(string senderId)
         {
-            var offers = await _vehicleOfferService.GetBySenderIdAsync(senderId);
-            return Ok(offers);
+            var query = new GetVehicleOffersBySenderIdQuery { SenderId = senderId };
+            var result = await Mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("receiver/{receiverId}")]
         public async Task<IActionResult> GetByReceiverId(string receiverId)
         {
-            var offers = await _vehicleOfferService.GetByReceiverIdAsync(receiverId);
-            return Ok(offers);
+            var query = new GetVehicleOffersByReceiverIdQuery { ReceiverId = receiverId };
+            var result = await Mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("vehicle-ad/{vehicleAdId}")]
         public async Task<IActionResult> GetByVehicleAdId(int vehicleAdId)
         {
-            var offers = await _vehicleOfferService.GetByVehicleAdIdAsync(vehicleAdId);
-            return Ok(offers);
+            var query = new GetVehicleOffersByVehicleAdIdQuery { VehicleAdId = vehicleAdId };
+            var result = await Mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("pending/{userId}")]
         public async Task<IActionResult> GetPendingOffers(string userId)
         {
-            var offers = await _vehicleOfferService.GetPendingOffersAsync(userId);
-            return Ok(offers);
+            var query = new GetPendingVehicleOffersQuery { UserId = userId };
+            var result = await Mediator.Send(query);
+            return Ok(result);
         }
     }
 } 
