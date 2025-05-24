@@ -9,12 +9,14 @@ using AccountService.Application.Features.Users.Commands.SignUpCommand;
 using AccountService.Application.Features.Users.Commands.UpdateUserCommand;
 using AccountService.Application.Features.Users.Commands.ValidateRefreshToken;
 using AccountService.Application.Features.Users.Queries.GetUserByIdQuery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountService.WebApi.Controller
 {
     public class UserController : BaseApiController
     {
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> SignUpUser(RegisterRequest registerRequest)
         {
@@ -23,6 +25,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(signUpCommand));
         }
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser(LoginUserRequest loginRequest)
         {
@@ -31,6 +34,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(logInCommand));
         }
+        [AllowAnonymous]
         [HttpPost("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string email,string token)
         {
@@ -40,6 +44,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(confirmEmailCommand));
         }
+        [AllowAnonymous]
         [HttpPost("ResendEmailConfirmCode")]
         public async Task<IActionResult> ResendEmailConfirmCode(string email)
         {
@@ -62,7 +67,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(changePasswordCommand));
         }
-
+        [AllowAnonymous]
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest)
         {

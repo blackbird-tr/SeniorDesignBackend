@@ -3,7 +3,9 @@ using AccountService.Application.Interfaces;
 using AccountService.Infrastructure;
 using AccountService.Infrastructure.Hubs;
 using AccountService.Infrastructure.Services;
-using AccountService.WebApi.Extensions; 
+using AccountService.WebApi.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,13 @@ builder.Services.AddSwaggerExtension();
 
 // Add SignalR
 builder.Services.AddSignalR();
-
+builder.Services.AddControllers(config =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    config.Filters.Add(new AuthorizeFilter(policy));
+});
 builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
 builder.Services.AddApplicationLayer();
 builder.Services.InfraPersistence(builder.Configuration);
