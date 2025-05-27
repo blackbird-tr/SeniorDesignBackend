@@ -86,6 +86,7 @@ namespace AccountService.Infrastructure.Services
             if (notification != null)
             {
                 notification.IsRead = true;
+                _context.Update(notification);
                 await _context.SaveChangesAsync();
             }
         }
@@ -103,6 +104,7 @@ namespace AccountService.Infrastructure.Services
             foreach (var notification in notifications)
             {
                 notification.IsRead = true;
+                _context.Update(notification);
             }
 
             await _context.SaveChangesAsync();
