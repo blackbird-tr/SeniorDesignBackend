@@ -33,10 +33,11 @@ namespace AccountService.Application.Features.CargoAd.Queries.GetAll
                     PickCity = ad.PickCity,
                     DropCountry = ad.DropCountry,
                     DropCity = ad.DropCity,
-                    currency =ad.currency,
+                    currency = ad.currency,
                     Price = ad.Price,
                     IsExpired = ad.IsExpired,
-                    CreatedDate = ad.CreatedDate
+                    CreatedDate = ad.CreatedDate,
+                    AdDate = ad.AdDate
                 })
                 .ToList();
         }

@@ -17,6 +17,7 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
         public string PickCity { get; set; }
         public string currency  { get; set; }
         public decimal Price { get; set; }
+        public DateTime AdDate { get; set; }
     }
 
     public class CreateCargoAdCommandHandler : IRequestHandler<CreateCargoAdCommand, CargoAdDto>
@@ -43,7 +44,8 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
                 PickCity = request.PickCity,
                 PickCountry = request.PickCountry,
                 Price = request.Price,
-                IsExpired = false
+                IsExpired = false,
+                AdDate = request.AdDate
             };
 
             var createdAd = await _cargoAdService.AddAsync(cargoAd);
@@ -52,6 +54,7 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
             {
                 Id = createdAd.Id,
                 UserId = createdAd.UserId,
+                CustomerName = createdAd.Customer?.UserName,
                 Title = createdAd.Title,
                 Description = createdAd.Description,
                 Weight = createdAd.Weight,
@@ -63,7 +66,8 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
                 currency = createdAd.currency,
                 Price = createdAd.Price,
                 IsExpired = createdAd.IsExpired,
-                CreatedDate = createdAd.CreatedDate
+                CreatedDate = createdAd.CreatedDate,
+                AdDate = createdAd.AdDate
             };
         }
     }

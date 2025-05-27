@@ -26,13 +26,13 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetAll
                     Title = ad.Title,
                     Description = ad.Desc,  
                     City = ad.City,
-                    Country=ad.Country,
+                    Country = ad.Country,
                     CarrierId = ad.userId,
-                    
                     CarrierName = ad.Carrier.UserName,
                     VehicleType = ad.VehicleType,
                     Capacity = ad.Capacity,
-                    CreatedDate = ad.CreatedDate
+                    CreatedDate = ad.CreatedDate,
+                    AdDate = ad.AdDate
                 })
                 .ToList();
         }

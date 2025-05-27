@@ -14,6 +14,7 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
         public string CarrierId { get; set; }
         public string VehicleType { get; set; }
         public float Capacity { get; set; }
+        public DateTime AdDate { get; set; }
     }
 
     public class CreateVehicleAdCommandHandler : IRequestHandler<CreateVehicleAdCommand, VehicleAdDto>
@@ -33,10 +34,10 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
                 Desc = request.Description,
                 Country = request.Country,
                 City = request.City,
-
                 userId = request.CarrierId,
                 VehicleType = request.VehicleType,
-                Capacity = request.Capacity
+                Capacity = request.Capacity,
+                AdDate = request.AdDate
             };
 
             var createdAd = await _vehicleAdService.AddAsync(vehicleAd);
@@ -45,13 +46,15 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
             {
                 Id = createdAd.Id,
                 Title = createdAd.Title,
-                Description = createdAd.Desc, 
-                CarrierId = createdAd.userId,
-                VehicleType = createdAd.VehicleType,
+                Description = createdAd.Desc,
                 Country = createdAd.Country,
                 City = createdAd.City,
+                CarrierId = createdAd.userId,
+                CarrierName = createdAd.Carrier?.UserName,
+                VehicleType = createdAd.VehicleType,
                 Capacity = createdAd.Capacity,
-                CreatedDate = createdAd.CreatedDate
+                CreatedDate = createdAd.CreatedDate,
+                AdDate = createdAd.AdDate
             };
         }
     }

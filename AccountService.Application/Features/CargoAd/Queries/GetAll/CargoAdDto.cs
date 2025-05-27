@@ -19,5 +19,6 @@ namespace AccountService.Application.Features.CargoAd
         public decimal Price { get; set; }
         public bool IsExpired { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime AdDate { get; set; }
     }
 } 

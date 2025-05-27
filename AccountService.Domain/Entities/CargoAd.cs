@@ -30,6 +30,9 @@ namespace AccountService.Domain.Entities
 
         public bool IsExpired { get; set; }
 
+        [Required]
+        public DateTime AdDate { get; set; }
+
         // Navigation properties
         public User Customer { get; set; } 
     }

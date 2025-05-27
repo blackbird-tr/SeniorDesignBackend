@@ -22,6 +22,9 @@ namespace AccountService.Domain.Entities
 
         [Required]
         public float Capacity { get; set; }
+        
+        [Required]
+        public DateTime AdDate { get; set; }
          
           
         // Navigation properties
