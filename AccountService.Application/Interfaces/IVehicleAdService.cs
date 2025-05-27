@@ -8,5 +8,7 @@ namespace AccountService.Application.Interfaces
         Task<List<VehicleAd>> GetByVehicleTypeAsync(string vehicleType); 
         Task<IReadOnlyList<VehicleAd>> GetAllAsync();
         Task<VehicleAd> GetByIdAsync(int id);
+        Task<List<VehicleAd>> GetByCityAsync(string city);
+        Task<List<VehicleAd>> GetByCountryAsync(string country);
     }
 } 

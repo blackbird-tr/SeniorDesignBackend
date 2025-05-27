@@ -6,5 +6,9 @@ namespace AccountService.Application.Interfaces
     {
         Task<List<CargoAd>> GetByCustomerIdAsync(string UserId); 
         Task<List<CargoAd>> GetByCargoTypeAsync(string cargoType);
+        Task<List<CargoAd>> GetByPickCityAsync(string city);
+        Task<List<CargoAd>> GetByPickCountryAsync(string country);
+        Task<List<CargoAd>> GetByDropCityAsync(string city);
+        Task<List<CargoAd>> GetByDropCountryAsync(string country);
     }
 } 
