@@ -6,7 +6,11 @@ using AccountService.Application.Features.CargoAd.Commands.Delete;
 using AccountService.Application.Features.CargoAd.Queries.GetAll;
 using AccountService.Application.Features.CargoAd.Queries.GetById;
 using AccountService.Application.Features.CargoAd.Queries.GetByCustomerId;
-using AccountService.Application.Features.CargoAd.Queries.GetByCargoType; 
+using AccountService.Application.Features.CargoAd.Queries.GetByCargoType;
+using AccountService.Application.Features.CargoAd.Queries.GetByPickCity;
+using AccountService.Application.Features.CargoAd.Queries.GetByPickCountry;
+using AccountService.Application.Features.CargoAd.Queries.GetByDropCity;
+using AccountService.Application.Features.CargoAd.Queries.GetByDropCountry;
 
 namespace AccountService.WebApi.Controllers
 {
@@ -66,6 +70,28 @@ namespace AccountService.WebApi.Controllers
             return Ok(await Mediator.Send(new GetCargoAdsByCargoTypeQuery { CargoType = cargoType }));
         }
 
-         
+        [HttpGet("by-pick-city/{city}")]
+        public async Task<IActionResult> GetByPickCity(string city)
+        {
+            return Ok(await Mediator.Send(new GetCargoAdsByPickCityQuery { City = city }));
+        }
+
+        [HttpGet("by-pick-country/{country}")]
+        public async Task<IActionResult> GetByPickCountry(string country)
+        {
+            return Ok(await Mediator.Send(new GetCargoAdsByPickCountryQuery { Country = country }));
+        }
+
+        [HttpGet("by-drop-city/{city}")]
+        public async Task<IActionResult> GetByDropCity(string city)
+        {
+            return Ok(await Mediator.Send(new GetCargoAdsByDropCityQuery { City = city }));
+        }
+
+        [HttpGet("by-drop-country/{country}")]
+        public async Task<IActionResult> GetByDropCountry(string country)
+        {
+            return Ok(await Mediator.Send(new GetCargoAdsByDropCountryQuery { Country = country }));
+        }
     }
 } 

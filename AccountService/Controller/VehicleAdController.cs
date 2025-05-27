@@ -5,6 +5,8 @@ using AccountService.Application.Features.VehicleAd.Queries.GetAll;
 using AccountService.Application.Features.VehicleAd.Queries.GetByCarrierId;
 using AccountService.Application.Features.VehicleAd.Queries.GetById;
 using AccountService.Application.Features.VehicleAd.Queries.GetByVehicleType;
+using AccountService.Application.Features.VehicleAd.Queries.GetByCity;
+using AccountService.Application.Features.VehicleAd.Queries.GetByCountry;
 using AccountService.WebApi.Controller;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,6 +67,17 @@ namespace AccountService.WebApi.Controllers
         {
             return Ok(await Mediator.Send(new GetVehicleAdsByVehicleTypeQuery { VehicleType = vehicleType }));
         }
-         
+
+        [HttpGet("by-city/{city}")]
+        public async Task<IActionResult> GetByCity(string city)
+        {
+            return Ok(await Mediator.Send(new GetVehicleAdsByCityQuery { City = city }));
+        }
+
+        [HttpGet("by-country/{country}")]
+        public async Task<IActionResult> GetByCountry(string country)
+        {
+            return Ok(await Mediator.Send(new GetVehicleAdsByCountryQuery { Country = country }));
+        }
     }
 } 

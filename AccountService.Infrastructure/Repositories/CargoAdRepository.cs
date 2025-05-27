@@ -47,5 +47,38 @@ namespace AccountService.Infrastructure.Repositories
                 .Where(c => c.CargoType == cargoType)
                 .ToListAsync();
         }
+
+
+        public async Task<List<CargoAd>> GetByPickCityAsync(string city)
+        {
+            return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Where(c => c.PickCity == city && c.Active)
+                .ToListAsync();
+        }
+
+        public async Task<List<CargoAd>> GetByPickCountryAsync(string country)
+        {
+            return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Where(c => c.PickCountry == country && c.Active)
+                .ToListAsync();
+        }
+
+        public async Task<List<CargoAd>> GetByDropCityAsync(string city)
+        {
+            return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Where(c => c.DropCity == city && c.Active)
+                .ToListAsync();
+        }
+
+        public async Task<List<CargoAd>> GetByDropCountryAsync(string country)
+        {
+            return await _context.CargoAds
+                .Include(c => c.Customer)
+                .Where(c => c.DropCountry == country && c.Active)
+                .ToListAsync();
+        }
     }
-} 
+}

@@ -44,6 +44,20 @@ namespace AccountService.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        
+        public async Task<List<VehicleAd>> GetByCityAsync(string city)
+        {
+            return await _context.VehicleAds
+                .Include(v => v.Carrier)
+                .Where(v => v.City == city && v.Active)
+                .ToListAsync();
+        }
+
+        public async Task<List<VehicleAd>> GetByCountryAsync(string country)
+        {
+            return await _context.VehicleAds
+                .Include(v => v.Carrier)
+                .Where(v => v.Country == country && v.Active)
+                .ToListAsync();
+        }
     }
 } 
