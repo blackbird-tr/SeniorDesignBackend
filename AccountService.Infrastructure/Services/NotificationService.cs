@@ -51,7 +51,23 @@ namespace AccountService.Infrastructure.Services
             await _context.SaveChangesAsync();
 
             // SignalR ile kullanıcıya özel real-time bildirim gönder
-            await _hubContext.Clients.User(user.Id).SendAsync("ReceiveNotification", notification);
+            //await _hubContext.Clients.User(user.Id).SendAsync("ReceiveNotification", notification);
+            try
+            {
+                await _hubContext.Clients.Group($"user_{user.Id}")
+                    .SendAsync("ReceiveNotification", new
+                    {
+                        Id = notification.Id,
+                        Title = notification.Title,
+                        Message = notification.Message,
+                        Type = notification.Type,
+                        CreatedDate = notification.CreatedDate
+                    });
+            }
+            catch (Exception ex)
+            {
+                // Logging önerilir, ama notification DB'ye yazıldığı için kayıp olmaz.
+            }
 
             return notification;
         }

@@ -67,6 +67,19 @@ namespace AccountService.Infrastructure
                   };
                   o.Events = new JwtBearerEvents()
                   {
+                      OnMessageReceived = context =>
+                      {
+                          var accessToken = context.Request.Query["access_token"];
+                          var path = context.HttpContext.Request.Path;
+
+                          // SignalR isteği için özel işlem yapıyoruz
+                          if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+                          {
+                              context.Token = accessToken;
+                          }
+
+                          return Task.CompletedTask;
+                      },
                       OnAuthenticationFailed = c =>
                       {
                           c.NoResult();

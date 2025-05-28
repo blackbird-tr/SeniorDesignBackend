@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AccountService.Infrastructure.Hubs
@@ -7,24 +8,23 @@ namespace AccountService.Infrastructure.Hubs
     {
         public override async Task OnConnectedAsync()
         {
-            // Kullanıcı bağlandığında kendi ID'sine göre gruba eklenir
-            var userId = Context.User?.FindFirst("uid")?.Value;
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!string.IsNullOrEmpty(userId))
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+                await Groups.AddToGroupAsync(Context.ConnectionId, $"user_{userId}");
             }
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            // Kullanıcı bağlantısı kesildiğinde gruptan çıkarılır
-            var userId = Context.User?.FindFirst("uid")?.Value;
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!string.IsNullOrEmpty(userId))
             {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user_{userId}");
             }
             await base.OnDisconnectedAsync(exception);
         }
+
     }
 } 
