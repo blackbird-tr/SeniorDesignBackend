@@ -1,7 +1,7 @@
 using AccountService.Application;
 using AccountService.Application.Interfaces;
-using AccountService.Infrastructure;
-using AccountService.Infrastructure.Hubs;
+using AccountService.Hubs;
+using AccountService.Infrastructure; 
 using AccountService.Infrastructure.Services;
 using AccountService.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -41,9 +41,11 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
+
                 .AllowAnyOrigin() // Veya .WithOrigins("http://localhost:3000")
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                ;
         });
 });
 var app = builder.Build();

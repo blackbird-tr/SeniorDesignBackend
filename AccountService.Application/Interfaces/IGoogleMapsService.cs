@@ -5,6 +5,6 @@ namespace AccountService.Application.Interfaces
     public interface IGoogleMapsService
     {
         Task<DistanceMatrixResponse> GetDistanceMatrixAsync(string origin, string destination);
-        Task<double> CalculatePriceAsync(string cargoType, double weight, double distanceInKm );
+        Task<PricePredictionResponse> CalculatePriceAsync(string origin, string destination, string cargoType, double weight, double distanceInKm, string country);
     }
 } 

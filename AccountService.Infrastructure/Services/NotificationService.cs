@@ -1,7 +1,6 @@
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
-using AccountService.Infrastructure.Context;
-using AccountService.Infrastructure.Hubs;
+using AccountService.Infrastructure.Context; 
 using AccountService.Application.Features.Notification.Queries.GetAll;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using AccountService.Hubs;
 
 namespace AccountService.Infrastructure.Services
 {
@@ -119,6 +119,9 @@ namespace AccountService.Infrastructure.Services
 
             foreach (var notification in notifications)
             {
+
+
+
                 notification.IsRead = true;
                 _context.Update(notification);
             }

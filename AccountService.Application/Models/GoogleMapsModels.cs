@@ -55,4 +55,6 @@ namespace AccountService.Application.Models
         [JsonPropertyName("value")]
         public int Value { get; set; }
     }
+
+     
 } 
