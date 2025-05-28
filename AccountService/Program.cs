@@ -29,6 +29,10 @@ builder.Services.AddControllers(config =>
 builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
 builder.Services.AddApplicationLayer();
 builder.Services.InfraPersistence(builder.Configuration);
+
+// Add Google Maps Service
+builder.Services.AddHttpClient<IGoogleMapsService, GoogleMapsService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
