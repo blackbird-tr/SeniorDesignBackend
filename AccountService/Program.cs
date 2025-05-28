@@ -19,6 +19,7 @@ builder.Services.AddSwaggerExtension();
 
 // Add SignalR
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<AccountService.Hubs.NotificationService>();
 builder.Services.AddControllers(config =>
 {
     var policy = new AuthorizationPolicyBuilder()

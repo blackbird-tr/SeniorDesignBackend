@@ -11,11 +11,19 @@ using AccountService.Application.Features.Users.Commands.ValidateRefreshToken;
 using AccountService.Application.Features.Users.Queries.GetUserByIdQuery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AccountService.Hubs;
 
 namespace AccountService.WebApi.Controller
 {
     public class UserController : BaseApiController
     {
+        private readonly NotificationService _notificationService;
+
+        public UserController(NotificationService notificationService)
+        {
+            _notificationService = notificationService;
+        }
+
         [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> SignUpUser(RegisterRequest registerRequest)
@@ -126,6 +134,15 @@ namespace AccountService.WebApi.Controller
 
 
             return Ok(await Mediator.Send(updateUserCommand));
+        }
+
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        [HttpGet("OnlineUsers")]
+        public IActionResult GetOnlineUsers()
+        {
+            var users = _notificationService.GetOnlineUsers();
+            return Ok(users.Select(u => new { UserId = u.Key, ConnectionId = u.Value }));
         }
     }
 }
