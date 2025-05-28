@@ -77,6 +77,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(forgotPasswordCommand));
         }
+        [AllowAnonymous]
         [HttpPost("GenerateForgotPasswordToken")]
         public async Task<IActionResult> GenerateForgotPasswordToken(GenerateForgotPasswordTokenRequest Request)
         {

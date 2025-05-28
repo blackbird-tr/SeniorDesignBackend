@@ -27,6 +27,7 @@ builder.Services.AddControllers(config =>
     config.Filters.Add(new AuthorizeFilter(policy));
 });
 builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddApplicationLayer();
 builder.Services.InfraPersistence(builder.Configuration);
 

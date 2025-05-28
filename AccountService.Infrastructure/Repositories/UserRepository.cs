@@ -4,6 +4,8 @@ using AccountService.Application.Features.Users.Commands.GenerateForgotPasswordT
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
 using AccountService.Infrastructure.Context;
+using AccountService.Infrastructure.Extensions;
+using AccountService.Infrastructure.Services;
 using Azure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,13 +29,15 @@ namespace AccountService.Infrastructure.Repositories
         private readonly JWTSettings _jWTSettings;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
         private readonly ApplicationDbContext _context;
-        public UserRepository(UserManager<User> userManager, IOptions<JWTSettings> jwtSettings, SignInManager<User> signInManager, JwtSecurityTokenHandler jwtSecurityTokenHandler, ApplicationDbContext application_context):base(application_context)
+        private readonly IEmailService _emailService;
+        public UserRepository(UserManager<User> userManager, IOptions<JWTSettings> jwtSettings, SignInManager<User> signInManager, JwtSecurityTokenHandler jwtSecurityTokenHandler, ApplicationDbContext application_context, IEmailService emailService):base(application_context)
         {
             _jWTSettings = jwtSettings.Value;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtSecurityTokenHandler = jwtSecurityTokenHandler;
             _context = application_context;
+            _emailService = emailService;
         }
          
 
@@ -170,19 +174,27 @@ namespace AccountService.Infrastructure.Repositories
             if (!result.Succeeded) throw new Exception("There occur an error");
             return new ForgotPasswordResponse() { Message = "Password changed." };
         }
-        
-        public async Task<GenerateForgotPasswordTokenResponse> GenerateForgotPasswordToken(GenerateForgotPasswordTokenRequest req)
+
+        public async Task<GenerateForgotPasswordTokenResponse> GenerateForgotPasswordToken(
+      GenerateForgotPasswordTokenRequest req)
         {
             var user = await _userManager.FindByEmailAsync(req.Email);
-            if (user == null) throw new Exception("User not found");
-            var result = await _userManager.GeneratePasswordResetTokenAsync(user);
-            if (result == null) throw new Exception("there occur an error");
-            return new GenerateForgotPasswordTokenResponse() { Message = result };
+            if (user == null)
+                throw new Exception("User not found");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+             
+            var emailSubject = "Şifre Sıfırlama Kodu";
+            var emailBody = token.ToResetPasswordHtmlBody(user.UserName);  
+            await _emailService.SendEmailAsync(req.Email, emailSubject, emailBody);
+
+            return new GenerateForgotPasswordTokenResponse { Message = "Token has been emailed." };
         }
+
 
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
-           var userwithSameUserName=await _userManager.FindByNameAsync(request.UserName);
+            var userwithSameUserName = await _userManager.FindByNameAsync(request.UserName);
             if (userwithSameUserName != null) { throw new Exception("Already Used Username"); }
 
             var userwithSameEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -197,22 +209,33 @@ namespace AccountService.Infrastructure.Repositories
                 UserName = request.UserName,
                 PhoneNumber = request.PhoneNumber 
             };
-            var result=await _userManager.CreateAsync(user,request.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded) { throw new Exception("There occur an error"); }
-            var code =await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            return new RegisterResponse() { Message = code, UserId = user.Id, UserName = user.UserName };
+            // Send confirmation email
+            var emailSubject = "Email Confirmation";
+            var emailBody = code.ToEmailConfirmationHtmlBody();
+            await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
+
+            return new RegisterResponse() { Message = "Registration successful. Please check your email for confirmation code.", UserId = user.Id, UserName = user.UserName };
         }
 
         public async Task<ResendEmailConfirmCodeResponse> ResendConfirmEmailCodeAsync(string email)
         {
-             var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null) throw new Exception("user not found");
             var isConfirmed = await _userManager.IsEmailConfirmedAsync(user);
             if (isConfirmed) { throw new Exception("email already confirmed"); }
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            return new ResendEmailConfirmCodeResponse { Message = code };
+
+            // Send confirmation email
+            var emailSubject = "Email Confirmation Code Resent";
+            var emailBody = code.ToEmailConfirmationHtmlBody();
+            await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
+
+            return new ResendEmailConfirmCodeResponse { Message = "Confirmation code has been resent to your email." };
         }
 
         public async Task<ValidateRefreshTokenResponse> ValidateRefreshToken(string userId, string token)
