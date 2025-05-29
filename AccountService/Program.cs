@@ -41,7 +41,7 @@ builder.Services.AddCors(options =>
     policy =>
     {
         policy
-            .WithOrigins("http://localhost:5175") // Frontend'in çal??t??? port
+            .WithOrigins("http://localhost:5173") // Frontend'in çal??t??? port
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials(); // Credentials için bu gerekli
