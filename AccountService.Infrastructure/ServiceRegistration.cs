@@ -78,6 +78,17 @@ namespace AccountService.Infrastructure
                         context.Response.ContentType = "application/json";
                         var result = System.Text.Json.JsonSerializer.Serialize(new { message = "Unauthorized" });
                         return context.Response.WriteAsync(result);
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return System.Threading.Tasks.Task.CompletedTask;
                     }
                 };
             });

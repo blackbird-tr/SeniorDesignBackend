@@ -14,7 +14,7 @@ namespace AccountService.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            // Kullanıcı bağlandığında kendi ID'sine göre gruba eklenir
+            // Kullan?c? ba?land???nda kendi ID'sine g�re gruba eklenir
             var userId = Context.User?.FindFirst("uid")?.Value;
             if (!string.IsNullOrEmpty(userId))
             {
@@ -26,12 +26,12 @@ namespace AccountService.Hubs
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            // Kullanıcı bağlantısı kesildiğinde gruptan çıkarılır
+            // Kullan?c? ba?lant?s? kesildi?inde gruptan �?kar?l?r
             var userId = Context.User?.FindFirst("uid")?.Value;
             if (!string.IsNullOrEmpty(userId))
             {
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user_{userId}");
-                _notificationService.RemoveUser(userId);
+                _notificationService.RemoveUser(userId, Context.ConnectionId);
             }
             await base.OnDisconnectedAsync(exception);
         }

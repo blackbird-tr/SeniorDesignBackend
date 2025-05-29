@@ -62,7 +62,8 @@ namespace AccountService.Infrastructure.Services
                 {
                     new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
                     new Claim(ClaimTypes.Name, admin.Username),
-                    new Claim(ClaimTypes.Role, "Admin")
+                    new Claim(ClaimTypes.Role, "Admin"),
+                    new Claim("uid", admin.Id.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

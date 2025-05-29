@@ -20,6 +20,7 @@ builder.Services.AddSwaggerExtension();
 // Add SignalR
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<AccountService.Hubs.NotificationService>();
+
 builder.Services.AddControllers(config =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -27,6 +28,7 @@ builder.Services.AddControllers(config =>
         .Build();
     config.Filters.Add(new AuthorizeFilter(policy));
 });
+
 builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddApplicationLayer();
@@ -41,19 +43,21 @@ builder.Services.AddCors(options =>
     policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173") // Frontend'in �al??t??? port
-            .WithOrigins("http://localhost:5174") // Frontend'in �al??t??? port
+            .WithOrigins("http://localhost:5173") // Frontend'in çalıştığı port
+            .WithOrigins("http://localhost:5174") // Frontend'in çalıştığı port
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials(); // Credentials i�in bu gerekli
+            .AllowCredentials(); // Credentials için bu gerekli
     });
 });
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
 
 app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwaggerUI();
+
 app.MapGet("/", context =>
 {
     context.Response.Redirect("/swagger");
