@@ -18,13 +18,15 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
     {
         private readonly IVehicleOfferService _vehicleOfferService;
         private readonly IAdminService _adminService;
-
+        private readonly IEmailService _emailService;
         public AcceptVehicleOfferCommandHandler(
             IVehicleOfferService vehicleOfferService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IEmailService emailService)
         {
             _vehicleOfferService = vehicleOfferService;
             _adminService = adminService;
+            _emailService = emailService;
         }
 
         public async Task<VehicleOfferDto> Handle(AcceptVehicleOfferCommand request, CancellationToken cancellationToken)
@@ -48,6 +50,8 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
                 }
                 vehicleOffer.Admin2Id = request.AdminId;
                 vehicleOffer.AdminStatus = (byte)OfferStatus.Accepted;
+                _emailService.SendEmailAsync(vehicleOffer.Sender.Email, "Araç Teklifi Onaylandı",
+                    $"Araç teklifi '{vehicleOffer.VehicleAdId}' için teklifiniz onaylandı.").Wait();
             }
 
             await _vehicleOfferService.UpdateAsync(vehicleOffer);

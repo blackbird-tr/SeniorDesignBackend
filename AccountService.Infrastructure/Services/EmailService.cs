@@ -1,13 +1,11 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
+using AccountService.Application.Interfaces;
 
 namespace AccountService.Infrastructure.Services
 {
-    public interface IEmailService
-    {
-        Task SendEmailAsync(string to, string subject, string htmlContent);
-    }
+   
 
     public class EmailService : IEmailService
     {

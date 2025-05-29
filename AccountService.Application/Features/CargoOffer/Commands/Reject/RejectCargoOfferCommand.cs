@@ -18,13 +18,16 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Reject
     {
         private readonly ICargoOfferService _cargoOfferService;
         private readonly IAdminService _adminService;
+        private readonly IEmailService _emailService;
 
         public RejectCargoOfferCommandHandler(
             ICargoOfferService cargoOfferService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IEmailService emailService)
         {
             _cargoOfferService = cargoOfferService;
             _adminService = adminService;
+            _emailService = emailService;
         }
 
         public async Task<CargoOfferDto> Handle(RejectCargoOfferCommand request, CancellationToken cancellationToken)
@@ -37,12 +40,23 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Reject
                 throw new Exception("Kargo teklifi bulunamadı");
 
             if (cargoOffer.Admin1Id == "0")
+            {
                 cargoOffer.Admin1Id = "-1";
-            if (cargoOffer.Admin2Id == "0")
+            }
+            else if (cargoOffer.Admin2Id == "0")
+            {
                 cargoOffer.Admin2Id = "-1";
+            }
+            else
+            {
+                // Eğer her iki admin ID'si de doluysa, hata fırlat
+                throw new Exception("Both Admin1Id and Admin2Id are already set.");
+            }
+
 
             cargoOffer.AdminStatus = (byte)OfferStatus.Rejected;
-
+            _emailService.SendEmailAsync(cargoOffer.Sender.Email, "Kargo Teklifi Reddedildi",
+                $"Kargo teklifi '{cargoOffer.CargoAdId}' için teklifiniz reddedildi.").Wait();
             await _cargoOfferService.UpdateAsync(cargoOffer);
 
             // Güncellenmiş veriyi tekrar çek

@@ -18,13 +18,15 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Accept
     {
         private readonly ICargoOfferService _cargoOfferService;
         private readonly IAdminService _adminService;
-
+         private readonly IEmailService _emailService;
         public AcceptCargoOfferCommandHandler(
             ICargoOfferService cargoOfferService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IEmailService emailService)
         {
             _cargoOfferService = cargoOfferService;
             _adminService = adminService;
+            _emailService = emailService;
         }
 
         public async Task<CargoOfferDto> Handle(AcceptCargoOfferCommand request, CancellationToken cancellationToken)
@@ -47,6 +49,8 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Accept
                     throw new Exception("Admin already accept");
                 }
                 cargoOffer.Admin2Id = request.AdminId;
+                _emailService.SendEmailAsync(cargoOffer.Sender.Email, "Kargo Teklifi Onaylandı",
+                    $"Kargo teklifi '{cargoOffer.CargoAdId}' için teklifiniz onaylandı.").Wait();
                 cargoOffer.AdminStatus = (byte)AdStatus.Accepted;
             }
 

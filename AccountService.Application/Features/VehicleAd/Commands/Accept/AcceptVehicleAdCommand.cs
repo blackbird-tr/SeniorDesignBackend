@@ -3,29 +3,33 @@ using AccountService.Application.Interfaces;
 using AccountService.Domain.Enums;
 using System;
 using AccountService.Domain.Entities;
+using AccountService.Application.Features.VehicleAd.Queries.GetAll;
 
 namespace AccountService.Application.Features.VehicleAd.Commands.Accept
 {
-    public class AcceptVehicleAdCommand : IRequest<bool>
+    public class AcceptVehicleAdCommand : IRequest<VehicleAdDto>
     {
         public int VehicleAdId { get; set; }
         public string AdminId { get; set; }
     }
 
-    public class AcceptVehicleAdCommandHandler : IRequestHandler<AcceptVehicleAdCommand, bool>
+    public class AcceptVehicleAdCommandHandler : IRequestHandler<AcceptVehicleAdCommand, VehicleAdDto>
     {
         private readonly IVehicleAdService _vehicleAdService;
         private readonly IAdminService _adminService;
+        private readonly IEmailService _emailService;
 
         public AcceptVehicleAdCommandHandler(
             IVehicleAdService vehicleAdService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IEmailService emailService)
         {
             _vehicleAdService = vehicleAdService;
             _adminService = adminService;
+            _emailService = emailService;
         }
 
-        public async Task<bool> Handle(AcceptVehicleAdCommand request, CancellationToken cancellationToken)
+        public async Task<VehicleAdDto> Handle(AcceptVehicleAdCommand request, CancellationToken cancellationToken)
         {
             if (!await _adminService.ExistsAsync(request.AdminId))
                 throw new Exception("Geçersiz admin ID");
@@ -52,10 +56,29 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Accept
             if (vehicleAd.Admin1Id != "0" && vehicleAd.Admin2Id != "0")
             {
                 vehicleAd.Status = (byte)AdStatus.Accepted;
+                _emailService.SendEmailAsync(vehicleAd.Carrier.Email, "Vehicle Ad Accepted",
+                    $"Your vehicle ad with title '{vehicleAd.Title}' has been accepted by both admins.").Wait();
             }
 
             await _vehicleAdService.UpdateAsync(vehicleAd);
-            return true;
+            var createdAd = await _vehicleAdService.GetByIdAsync(request.VehicleAdId);
+            return new VehicleAdDto
+            {
+                Id = createdAd.Id,
+                Title = createdAd.Title,
+                Description = createdAd.Desc,
+                Country = createdAd.Country,
+                City = createdAd.City,
+                CarrierId = createdAd.userId,
+                CarrierName = createdAd.Carrier?.UserName,
+                VehicleType = createdAd.VehicleType,
+                Capacity = createdAd.Capacity,
+                CreatedDate = createdAd.CreatedDate,
+                AdDate = createdAd.AdDate,
+                Admin1Id = createdAd.Admin1Id,
+                Admin2Id = createdAd.Admin2Id,
+                Status = ((AdStatus)createdAd.Status).ToString()
+            };
         }
     }
 } 

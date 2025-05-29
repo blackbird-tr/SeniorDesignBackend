@@ -18,13 +18,15 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Reject
     {
         private readonly IVehicleOfferService _vehicleOfferService;
         private readonly IAdminService _adminService;
-
+        private readonly IEmailService _emailService;
         public RejectVehicleOfferCommandHandler(
             IVehicleOfferService vehicleOfferService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IEmailService emailService)
         {
             _vehicleOfferService = vehicleOfferService;
             _adminService = adminService;
+            _emailService = emailService;
         }
 
         public async Task<VehicleOfferDto> Handle(RejectVehicleOfferCommand request, CancellationToken cancellationToken)
@@ -35,13 +37,23 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Reject
             var vehicleOffer = await _vehicleOfferService.GetByIdAsync(request.Id);
             if (vehicleOffer == null)
                 throw new Exception("Araç teklifi bulunamadı");
-
+             
             if (vehicleOffer.Admin1Id == "0")
+            {
                 vehicleOffer.Admin1Id = "-1";
-            if (vehicleOffer.Admin2Id == "0")
+            }
+            else if (vehicleOffer.Admin2Id == "0")
+            {
                 vehicleOffer.Admin2Id = "-1";
-
+            }
+            else
+            {
+                // Eğer her iki admin ID'si de doluysa, hata fırlat
+                throw new Exception("Both Admin1Id and Admin2Id are already set.");
+            }
             vehicleOffer.AdminStatus = (byte)OfferStatus.Rejected;
+            _emailService.SendEmailAsync(vehicleOffer.Sender.Email, "Araç Teklifi Reddedildi",
+                $"Araç teklifi '{vehicleOffer.VehicleAdId}' için teklifiniz reddedildi.").Wait();
 
             await _vehicleOfferService.UpdateAsync(vehicleOffer);
 

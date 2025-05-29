@@ -88,7 +88,10 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
                 Message = createdOffer.Message,
                 Status = createdOffer.Status.ToString(),
                 ExpiryDate = createdOffer.ExpiryDate,
-                CreatedDate = createdOffer.CreatedDate
+                CreatedDate = createdOffer.CreatedDate,
+                Admin1Id = createdOffer.Admin1Id,
+                Admin2Id = createdOffer.Admin2Id,
+                AdminStatus = ((AdStatus)createdOffer.AdminStatus).ToString()
             };
         }
     }

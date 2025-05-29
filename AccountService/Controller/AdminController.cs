@@ -42,7 +42,7 @@ namespace AccountService.WebApi.Controller
         }
 
         [AllowAnonymous]
-        [HttpPost("loginnn")]
+        [HttpPost("LoginAdmin")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             try
@@ -55,32 +55,31 @@ namespace AccountService.WebApi.Controller
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [AllowAnonymous]
-        [HttpPost("LoginAdmin")]
-        public async Task<IActionResult> LoginAdmin([FromBody] AdminLoginDto loginDto)
-        {
-            try
-            {
-                var admin = await _context.Admins
-                    .FirstOrDefaultAsync(a => a.Username == loginDto.Username && a.Password == loginDto.Password);
+        //[AllowAnonymous]
+        //public async Task<IActionResult> LoginAdmin([FromBody] AdminLoginDto loginDto)
+        //{
+        //    try
+        //    {
+        //        var admin = await _context.Admins
+        //            .FirstOrDefaultAsync(a => a.Username == loginDto.Username && a.Password == loginDto.Password);
 
-                if (admin != null)
-                {
-                    return Ok(new
-                    {
-                        success = true,
-                        message = "Login successful",
-                        adminId = admin.Id.ToString()
-                    });
-                }
+        //        if (admin != null)
+        //        {
+        //            return Ok(new
+        //            {
+        //                success = true,
+        //                message = "Login successful",
+        //                adminId = admin.Id.ToString()
+        //            });
+        //        }
 
-                return StatusCode(401, new { success = false, message = "Invalid username or password" });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { success = false, message = "An error occurred during login" });
-            }
-        }
+        //        return StatusCode(401, new { success = false, message = "Invalid username or password" });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500, new { success = false, message = "An error occurred during login" });
+        //    }
+        //}
 
         // Accept actions
         [HttpPost("AcceptCargoAd")]

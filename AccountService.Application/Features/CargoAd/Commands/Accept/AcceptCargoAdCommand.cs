@@ -18,13 +18,14 @@ namespace AccountService.Application.Features.CargoAd.Commands.Accept
     {
         private readonly ICargoAdService _cargoAdService;
         private readonly IAdminService _adminService;
-
+        private readonly IEmailService emailService;
         public AcceptCargoAdCommandHandler(
             ICargoAdService cargoAdService,
-            IAdminService adminService)
+            IAdminService adminService,IEmailService email)
         {
             _cargoAdService = cargoAdService;
             _adminService = adminService;
+            emailService = email;
         }
 
         public async Task<CargoAdDto> Handle(AcceptCargoAdCommand request, CancellationToken cancellationToken)
@@ -54,6 +55,8 @@ namespace AccountService.Application.Features.CargoAd.Commands.Accept
             if (cargoAd.Admin1Id != "0" && cargoAd.Admin2Id != "0")
             {
                 cargoAd.Status = (byte)AdStatus.Accepted;
+                emailService.SendEmailAsync(cargoAd.Customer.Email, "Cargo Ad Accepted",
+                    $"Your cargo ad with title '{cargoAd.Title}' has been accepted by both admins.").Wait();
             }
 
             await _cargoAdService.UpdateAsync(cargoAd);

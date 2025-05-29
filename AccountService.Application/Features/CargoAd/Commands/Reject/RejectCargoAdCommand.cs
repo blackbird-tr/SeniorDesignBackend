@@ -19,12 +19,15 @@ namespace AccountService.Application.Features.CargoAd.Commands.Reject
         private readonly ICargoAdService _cargoAdService;
         private readonly IAdminService _adminService;
 
+        private readonly IEmailService emailService;
         public RejectCargoAdCommandHandler(
             ICargoAdService cargoAdService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IEmailService emailService)
         {
             _cargoAdService = cargoAdService;
             _adminService = adminService;
+            this.emailService = emailService;
         }
 
         public async Task<CargoAdDto> Handle(RejectCargoAdCommand request, CancellationToken cancellationToken)
@@ -46,10 +49,16 @@ namespace AccountService.Application.Features.CargoAd.Commands.Reject
             {
                 cargoAd.Admin2Id = "-1";
             }
+            else
+            {
+                // Eğer her iki admin ID'si de doluysa, hata fırlat
+                throw new Exception("Both Admin1Id and Admin2Id are already set.");
+            }
 
-            // Status'u Rejected olarak set et
-            cargoAd.Status = (byte)AdStatus.Rejected;
-
+                // Status'u Rejected olarak set et
+                cargoAd.Status = (byte)AdStatus.Rejected; 
+            emailService.SendEmailAsync(cargoAd.Customer.Email, "Cargo Ad Rejected",
+                $"Your cargo ad with title '{cargoAd.Title}' has been rejected by the admin.").Wait();
             await _cargoAdService.UpdateAsync(cargoAd);
 
             // Güncellenmiş veriyi tekrar çek

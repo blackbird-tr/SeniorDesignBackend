@@ -2,6 +2,7 @@
 using AccountService.Application.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountService.Domain.Enums;
 
 namespace AccountService.Application.Features.CargoOffer.Queries.GetById
 {
@@ -45,7 +46,7 @@ namespace AccountService.Application.Features.CargoOffer.Queries.GetById
                 CreatedDate = offer.CreatedDate,
                 Admin1Id = offer.Admin1Id,
                 Admin2Id = offer.Admin2Id,
-                AdminStatus = offer.AdminStatus.ToString()
+                AdminStatus = ((AdStatus)offer.AdminStatus).ToString()
             };
         }
     }

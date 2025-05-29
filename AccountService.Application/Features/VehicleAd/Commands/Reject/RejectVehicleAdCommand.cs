@@ -15,13 +15,16 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Reject
     {
         private readonly IVehicleAdService _vehicleAdService;
         private readonly IAdminService _adminService;
+        private readonly IEmailService _emailService;
 
         public RejectVehicleAdCommandHandler(
             IVehicleAdService vehicleAdService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IEmailService emailService)
         {
             _vehicleAdService = vehicleAdService;
             _adminService = adminService;
+            _emailService = emailService;
         }
 
         public async Task<bool> Handle(RejectVehicleAdCommand request, CancellationToken cancellationToken)
@@ -43,9 +46,15 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Reject
             {
                 vehicleAd.Admin2Id = "-1";
             }
-
+            else
+            {
+                // Eğer her iki admin ID'si de doluysa, hata fırlat
+                throw new Exception("Both Admin1Id and Admin2Id are already set.");
+            }
             // Status'u Rejected olarak set et
             vehicleAd.Status = (byte)AdStatus.Rejected;
+            _emailService.SendEmailAsync(vehicleAd.Carrier.Email, "Vehicle Ad Rejected",
+                $"Your vehicle ad with title '{vehicleAd.Title}' has been rejected by the admin.").Wait();
 
             await _vehicleAdService.UpdateAsync(vehicleAd);
             return true;
