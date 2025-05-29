@@ -2,6 +2,7 @@ using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Enums;
 using System;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.VehicleAd.Commands.Reject
 {
@@ -53,8 +54,9 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Reject
             }
             // Status'u Rejected olarak set et
             vehicleAd.Status = (byte)AdStatus.Rejected;
-            _emailService.SendEmailAsync(vehicleAd.Carrier.Email, "Vehicle Ad Rejected",
-                $"Your vehicle ad with title '{vehicleAd.Title}' has been rejected by the admin.").Wait();
+            var body = vehicleAd.ToVehicleAdMailBody();
+            _emailService.SendEmailAsync(vehicleAd.Carrier.Email, "Araç ilanı reddedildi",
+                body).Wait();
 
             await _vehicleAdService.UpdateAsync(vehicleAd);
             return true;

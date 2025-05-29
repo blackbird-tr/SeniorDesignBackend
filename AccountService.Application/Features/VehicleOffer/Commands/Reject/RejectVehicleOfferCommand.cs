@@ -5,6 +5,7 @@ using AccountService.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.VehicleOffer.Commands.Reject
 {
@@ -52,8 +53,9 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Reject
                 throw new Exception("Both Admin1Id and Admin2Id are already set.");
             }
             vehicleOffer.AdminStatus = (byte)OfferStatus.Rejected;
+            var body = vehicleOffer.ToVehicleOfferMailBody();
             _emailService.SendEmailAsync(vehicleOffer.Sender.Email, "Araç Teklifi Reddedildi",
-                $"Araç teklifi '{vehicleOffer.VehicleAdId}' için teklifiniz reddedildi.").Wait();
+                body).Wait();
 
             await _vehicleOfferService.UpdateAsync(vehicleOffer);
 

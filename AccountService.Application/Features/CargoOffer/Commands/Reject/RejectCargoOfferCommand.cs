@@ -5,6 +5,7 @@ using AccountService.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.CargoOffer.Commands.Reject
 {
@@ -55,8 +56,10 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Reject
 
 
             cargoOffer.AdminStatus = (byte)OfferStatus.Rejected;
+            var body = cargoOffer.ToCargoOfferMailBody();
+
             _emailService.SendEmailAsync(cargoOffer.Sender.Email, "Kargo Teklifi Reddedildi",
-                $"Kargo teklifi '{cargoOffer.CargoAdId}' için teklifiniz reddedildi.").Wait();
+               body).Wait();
             await _cargoOfferService.UpdateAsync(cargoOffer);
 
             // Güncellenmiş veriyi tekrar çek

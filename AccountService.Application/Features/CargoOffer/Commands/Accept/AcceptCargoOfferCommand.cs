@@ -5,6 +5,7 @@ using AccountService.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.CargoOffer.Commands.Accept
 {
@@ -49,8 +50,10 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Accept
                     throw new Exception("Admin already accept");
                 }
                 cargoOffer.Admin2Id = request.AdminId;
+                var body = cargoOffer.ToCargoOfferMailBody();
+                 
                 _emailService.SendEmailAsync(cargoOffer.Sender.Email, "Kargo Teklifi Onaylandı",
-                    $"Kargo teklifi '{cargoOffer.CargoAdId}' için teklifiniz onaylandı.").Wait();
+                    body).Wait();
                 cargoOffer.AdminStatus = (byte)AdStatus.Accepted;
             }
 

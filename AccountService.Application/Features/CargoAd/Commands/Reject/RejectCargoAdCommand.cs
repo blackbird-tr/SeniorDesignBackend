@@ -3,8 +3,9 @@ using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
 using AccountService.Domain.Enums;
 using System;
-using System.Threading;
+using System.Threading; 
 using System.Threading.Tasks;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.CargoAd.Commands.Reject
 {
@@ -56,9 +57,10 @@ namespace AccountService.Application.Features.CargoAd.Commands.Reject
             }
 
                 // Status'u Rejected olarak set et
-                cargoAd.Status = (byte)AdStatus.Rejected; 
-            emailService.SendEmailAsync(cargoAd.Customer.Email, "Cargo Ad Rejected",
-                $"Your cargo ad with title '{cargoAd.Title}' has been rejected by the admin.").Wait();
+                cargoAd.Status = (byte)AdStatus.Rejected;
+            var body = cargoAd.ToCargoAdMailBody();
+            emailService.SendEmailAsync(cargoAd.Customer.Email, "Kargo ilanı reddedildi",
+               body).Wait();
             await _cargoAdService.UpdateAsync(cargoAd);
 
             // Güncellenmiş veriyi tekrar çek

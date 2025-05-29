@@ -5,6 +5,7 @@ using AccountService.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
 {
@@ -50,8 +51,9 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
                 }
                 vehicleOffer.Admin2Id = request.AdminId;
                 vehicleOffer.AdminStatus = (byte)OfferStatus.Accepted;
+                var body = vehicleOffer.ToVehicleOfferMailBody();
                 _emailService.SendEmailAsync(vehicleOffer.Sender.Email, "Araç Teklifi Onaylandı",
-                    $"Araç teklifi '{vehicleOffer.VehicleAdId}' için teklifiniz onaylandı.").Wait();
+                    body).Wait();
             }
 
             await _vehicleOfferService.UpdateAsync(vehicleOffer);

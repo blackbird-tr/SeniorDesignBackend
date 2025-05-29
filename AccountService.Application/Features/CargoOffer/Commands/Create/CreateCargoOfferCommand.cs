@@ -60,15 +60,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
             if (cargoAd == null)
                 throw new ArgumentException("Kargo ilanı bulunamadı");
 
-            // İlan fiyatının %20 altında veya %50 üstünde teklif verilemez
-            var minPrice = cargoAd.Price * 0.8m; // %20 altı
-            var maxPrice = cargoAd.Price * 1.5m; // %50 üstü
-
-            if (request.Price < minPrice)
-                throw new ArgumentException($"Teklif fiyatı ilan fiyatının en az %80'i olmalıdır. Minimum fiyat: {minPrice}");
-
-            if (request.Price > maxPrice)
-                throw new ArgumentException($"Teklif fiyatı ilan fiyatının en fazla %150'si olabilir. Maksimum fiyat: {maxPrice}");
+             
 
             var offer = new Domain.Entities.CargoOffer
             {

@@ -4,6 +4,7 @@ using AccountService.Domain.Enums;
 using System;
 using AccountService.Domain.Entities;
 using AccountService.Application.Features.VehicleAd.Queries.GetAll;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.VehicleAd.Commands.Accept
 {
@@ -56,8 +57,9 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Accept
             if (vehicleAd.Admin1Id != "0" && vehicleAd.Admin2Id != "0")
             {
                 vehicleAd.Status = (byte)AdStatus.Accepted;
-                _emailService.SendEmailAsync(vehicleAd.Carrier.Email, "Vehicle Ad Accepted",
-                    $"Your vehicle ad with title '{vehicleAd.Title}' has been accepted by both admins.").Wait();
+                var body = vehicleAd.ToVehicleAdMailBody();
+                _emailService.SendEmailAsync(vehicleAd.Carrier.Email, "Araç ilanı kabul edildi",
+                    body).Wait();
             }
 
             await _vehicleAdService.UpdateAsync(vehicleAd);

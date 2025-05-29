@@ -5,6 +5,7 @@ using AccountService.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountService.Infrastructure.Extensions;
 
 namespace AccountService.Application.Features.CargoAd.Commands.Accept
 {
@@ -55,8 +56,10 @@ namespace AccountService.Application.Features.CargoAd.Commands.Accept
             if (cargoAd.Admin1Id != "0" && cargoAd.Admin2Id != "0")
             {
                 cargoAd.Status = (byte)AdStatus.Accepted;
-                emailService.SendEmailAsync(cargoAd.Customer.Email, "Cargo Ad Accepted",
-                    $"Your cargo ad with title '{cargoAd.Title}' has been accepted by both admins.").Wait();
+                var body = cargoAd.ToCargoAdMailBody();
+             
+                emailService.SendEmailAsync(cargoAd.Customer.Email, "Kargo ilanı kabul edildi",
+                   body).Wait();
             }
 
             await _cargoAdService.UpdateAsync(cargoAd);
