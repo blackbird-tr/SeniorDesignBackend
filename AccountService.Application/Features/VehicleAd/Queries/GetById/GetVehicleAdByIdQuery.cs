@@ -43,7 +43,10 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetById
                 CarrierName = vehicleAd.Carrier.UserName,
                 VehicleType = vehicleAd.VehicleType,
                 Capacity = vehicleAd.Capacity,
-                CreatedDate = vehicleAd.CreatedDate
+                CreatedDate = vehicleAd.CreatedDate,
+                Admin1Id = vehicleAd.Admin1Id,
+                Admin2Id = vehicleAd.Admin2Id,
+                Status = ((Domain.Enums.AdStatus)vehicleAd.Status).ToString(),AdDate=vehicleAd.AdDate
             };
         }
     }

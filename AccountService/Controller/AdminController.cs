@@ -7,6 +7,7 @@ using AccountService.Application.Features.VehicleAd.Commands.Accept;
 using AccountService.Application.Features.VehicleAd.Commands.Reject;
 using AccountService.Application.Features.VehicleOffer.Commands.Accept;
 using AccountService.Application.Features.VehicleOffer.Commands.Reject;
+using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
 using AccountService.Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
@@ -22,12 +23,38 @@ namespace AccountService.WebApi.Controller
     public class AdminController : BaseApiController
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAdminAuthService _adminAuthService;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context, IAdminAuthService adminAuthService)
         {
             _context = context;
+            _adminAuthService = adminAuthService;
+        } 
+   
+           
+
+            
+
+        public class LoginRequest
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
 
+        [AllowAnonymous]
+        [HttpPost("loginnn")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            try
+            {
+                var (adminId, jwtToken, refreshToken) = await _adminAuthService.AuthenticateAsync(request.Username, request.Password);
+                return Ok(new { AdminId = adminId, JwtToken = jwtToken, RefreshToken = refreshToken });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
         [AllowAnonymous]
         [HttpPost("LoginAdmin")]
         public async Task<IActionResult> LoginAdmin([FromBody] AdminLoginDto loginDto)

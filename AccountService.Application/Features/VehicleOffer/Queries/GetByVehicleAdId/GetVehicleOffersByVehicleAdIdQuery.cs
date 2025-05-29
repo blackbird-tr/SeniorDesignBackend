@@ -44,7 +44,10 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetByVehicleA
                     Message = offer.Message,
                     Status = offer.Status,
                     ExpiryDate = offer.ExpiryDate,
-                    CreatedDate = offer.CreatedDate
+                    CreatedDate = offer.CreatedDate,
+                    Admin1Id = offer.Admin1Id,
+                    Admin2Id = offer.Admin2Id,
+                    AdminStatus = ((Domain.Enums.AdStatus)offer.AdminStatus).ToString()
                 })
                 .ToList();
         }

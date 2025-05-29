@@ -33,20 +33,23 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetByReceiver
             }
 
             return offers
-                .Where(x => x.Active)
-                .Select(offer => new VehicleOfferDto
-                {
-                    Id = offer.Id,
-                    SenderId = offer.SenderId,
-                    ReceiverId = offer.ReceiverId,
-                    VehicleAdId = offer.VehicleAdId,
-                    VehicleAdTitle = offer.VehicleAd?.Title,
-                    Message = offer.Message,
-                    Status = offer.Status,
-                    ExpiryDate = offer.ExpiryDate,
-                    CreatedDate = offer.CreatedDate
-                })
-                .ToList();
+                 .Where(x => x.Active)
+                 .Select(offer => new VehicleOfferDto
+                 {
+                     Id = offer.Id,
+                     SenderId = offer.SenderId,
+                     ReceiverId = offer.ReceiverId,
+                     VehicleAdId = offer.VehicleAdId,
+                     VehicleAdTitle = offer.VehicleAd?.Title,
+                     Message = offer.Message,
+                     Status = offer.Status,
+                     ExpiryDate = offer.ExpiryDate,
+                     CreatedDate = offer.CreatedDate,
+                     Admin1Id = offer.Admin1Id,
+                     Admin2Id = offer.Admin2Id,
+                     AdminStatus = ((Domain.Enums.AdStatus)offer.AdminStatus).ToString()
+                 })
+                 .ToList();
         }
     }
 }

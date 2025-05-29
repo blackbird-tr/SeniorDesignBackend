@@ -41,7 +41,12 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetAll
                     VehicleType = ad.VehicleType,
                     Capacity = ad.Capacity,
                     CreatedDate = ad.CreatedDate,
-                    AdDate = ad.AdDate
+                    AdDate = ad.AdDate,
+                    Admin1Id = ad.Admin1Id,
+                    Admin2Id = ad.Admin2Id,
+                    Status = ((Domain.Enums.AdStatus)ad.Status).ToString()
+
+
                 })
                 .ToList();
         }

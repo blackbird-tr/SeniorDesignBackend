@@ -46,7 +46,10 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetByCountry
                     CarrierName = ad.Carrier.UserName,
                     VehicleType = ad.VehicleType,
                     Capacity = ad.Capacity,
-                    CreatedDate = ad.CreatedDate
+                    CreatedDate = ad.CreatedDate,
+                    Admin1Id = ad.Admin1Id,
+                    Admin2Id = ad.Admin2Id,
+                    Status = ((Domain.Enums.AdStatus)ad.Status).ToString(),AdDate=ad.AdDate
                 })
                 .ToList();
         }

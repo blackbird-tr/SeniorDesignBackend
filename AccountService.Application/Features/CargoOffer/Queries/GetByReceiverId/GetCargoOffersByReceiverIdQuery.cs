@@ -45,7 +45,10 @@ namespace AccountService.Application.Features.CargoOffer.Queries.GetByReceiverId
                     Message = offer.Message,
                     Status = offer.Status.ToString(),
                     ExpiryDate = offer.ExpiryDate,
-                    CreatedDate = offer.CreatedDate
+                    CreatedDate = offer.CreatedDate,
+                    Admin1Id = offer.Admin1Id,
+                    Admin2Id = offer.Admin2Id,
+                    AdminStatus = offer.AdminStatus.ToString()
                 })
                 .ToList();
         }

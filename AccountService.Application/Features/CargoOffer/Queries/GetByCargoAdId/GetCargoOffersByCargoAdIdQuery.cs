@@ -33,21 +33,24 @@ namespace AccountService.Application.Features.CargoOffer.Queries.GetByCargoAdId
             }
 
             return offers
-                .Where(x => x.Active)
-                .Select(offer => new CargoOfferDto
-                {
-                    Id = offer.Id,
-                    SenderId = offer.SenderId,
-                    ReceiverId = offer.ReceiverId,
-                    CargoAdId = offer.CargoAdId,
-                    CargoAdTitle = offer.CargoAd?.Title,
-                    Price = offer.Price,
-                    Message = offer.Message,
-                    Status = offer.Status.ToString(),
-                    ExpiryDate = offer.ExpiryDate,
-                    CreatedDate = offer.CreatedDate
-                })
-                .ToList();
+                   .Where(x => x.Active)
+                   .Select(offer => new CargoOfferDto
+                   {
+                       Id = offer.Id,
+                       SenderId = offer.SenderId,
+                       ReceiverId = offer.ReceiverId,
+                       CargoAdId = offer.CargoAdId,
+                       CargoAdTitle = offer.CargoAd?.Title,
+                       Price = offer.Price,
+                       Message = offer.Message,
+                       Status = offer.Status.ToString(),
+                       ExpiryDate = offer.ExpiryDate,
+                       CreatedDate = offer.CreatedDate,
+                       Admin1Id = offer.Admin1Id,
+                       Admin2Id = offer.Admin2Id,
+                       AdminStatus = offer.AdminStatus.ToString()
+                   })
+                   .ToList();
         }
     }
 }
