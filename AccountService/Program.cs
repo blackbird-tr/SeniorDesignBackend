@@ -38,15 +38,14 @@ builder.Services.AddHttpClient<IGoogleMapsService, GoogleMapsService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy
-
-                .AllowAnyOrigin() // Veya .WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                ;
-        });
+    policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5175") // Frontend'in çal??t??? port
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // Credentials için bu gerekli
+    });
 });
 var app = builder.Build();
 
