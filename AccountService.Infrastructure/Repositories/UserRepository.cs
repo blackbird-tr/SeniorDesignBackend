@@ -322,5 +322,41 @@ namespace AccountService.Infrastructure.Repositories
 
              
         }
+        public async Task<DeleteUserResponse> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new DeleteUserResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                };
+            }
+
+            // Kullanıcının refresh tokenlarını sil
+            var refreshTokens = await _context.RefreshTokens.Where(rt => rt.UserID == userId).ToListAsync();
+            _context.RefreshTokens.RemoveRange(refreshTokens);
+
+            // Kullanıcıyı sil
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return new DeleteUserResponse
+                {
+                    Success = false,
+                    Message = "Failed to delete user"
+                };
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new DeleteUserResponse
+            {
+                Success = true,
+                Message = "User successfully deleted"
+            };
+        }
+
     }
 }

@@ -8,6 +8,7 @@ using AccountService.Application.Features.Users.Commands.LogInCommand;
 using AccountService.Application.Features.Users.Commands.SignUpCommand;
 using AccountService.Application.Features.Users.Commands.UpdateUserCommand;
 using AccountService.Application.Features.Users.Commands.ValidateRefreshToken;
+using AccountService.Application.Features.Users.Commands.DeleteUserCommand;
 using AccountService.Application.Features.Users.Queries.GetUserByIdQuery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -134,6 +135,17 @@ namespace AccountService.WebApi.Controller
 
 
             return Ok(await Mediator.Send(updateUserCommand));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            DeleteUserCommand deleteUserCommand = new DeleteUserCommand
+            {
+                UserId = id
+            };
+
+            return Ok(await Mediator.Send(deleteUserCommand));
         }
 
         //[Authorize(Roles = "Admin")]
