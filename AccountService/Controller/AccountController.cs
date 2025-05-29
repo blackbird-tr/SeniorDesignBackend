@@ -7,8 +7,7 @@ using AccountService.Application.Features.Users.Commands.GenerateForgotPasswordT
 using AccountService.Application.Features.Users.Commands.LogInCommand;
 using AccountService.Application.Features.Users.Commands.SignUpCommand;
 using AccountService.Application.Features.Users.Commands.UpdateUserCommand;
-using AccountService.Application.Features.Users.Commands.ValidateRefreshToken;
-using AccountService.Application.Features.Users.Commands.DeleteUserCommand;
+using AccountService.Application.Features.Users.Commands.ValidateRefreshToken; 
 using AccountService.Application.Features.Users.Queries.GetUserByIdQuery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -140,15 +139,20 @@ namespace AccountService.WebApi.Controller
             return Ok(await Mediator.Send(updateUserCommand));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(string id)
+        [AllowAnonymous]
+        [HttpPost("Lockout/{id}")]
+        public async Task<IActionResult> LockoutUser(string id)
         {
-            DeleteUserCommand deleteUserCommand = new DeleteUserCommand
-            {
-                UserId = id
-            };
+            var result = await _userRepository.EnableLockoutAsync(id);
+            return Ok(result);
+        }
 
-            return Ok(await Mediator.Send(deleteUserCommand));
+        [AllowAnonymous]
+        [HttpPost("Unlock/{id}")]
+        public async Task<IActionResult> UnlockUser(string id)
+        {
+            var result = await _userRepository.DisableLockoutAsync(id);
+            return Ok(result);
         }
 
         //[Authorize(Roles = "Admin")]

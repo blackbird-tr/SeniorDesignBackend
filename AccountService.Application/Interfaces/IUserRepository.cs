@@ -23,7 +23,8 @@ namespace AccountService.Application.Interfaces
         Task<ExchangeRefreshTokenResponse> ExchangeRefreshToken(RequestRefreshToken requestRefreshToken);
         Task<GetUserByIdResponse> GetUserByIdAsync(GetUserByIdRequest getUserByIdRequest);
         Task<UpdateUserResponse> UpdateUser(UpdateUserRequest updateUserRequest);
-        Task<DeleteUserResponse> DeleteUserAsync(string userId);
+        Task<LockoutUserResponse> EnableLockoutAsync(string userId);
+        Task<LockoutUserResponse> DisableLockoutAsync(string userId);
         Task<List<AllUsersResponse>> GetAllUsersAsync();
     }
 }

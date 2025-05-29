@@ -66,14 +66,7 @@ namespace AccountService.Infrastructure.Context
 
             base.OnModelCreating(modelBuilder); // Identity tabloları için şart!
 
-            
-
-             
-
-          
-        
-
-
+               
             // 2. Tüm foreign key ilişkilerinde default olarak Restrict uygula
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
                          .SelectMany(e => e.GetForeignKeys()))

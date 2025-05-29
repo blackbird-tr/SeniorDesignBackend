@@ -322,45 +322,74 @@ namespace AccountService.Infrastructure.Repositories
 
              
         }
-        public async Task<DeleteUserResponse> DeleteUserAsync(string userId)
+        public async Task<LockoutUserResponse> EnableLockoutAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return new DeleteUserResponse
+                return new LockoutUserResponse
                 {
                     Success = false,
                     Message = "User not found"
                 };
             }
 
-            // Kullanıcının refresh tokenlarını sil
-            var refreshTokens = await _context.RefreshTokens.Where(rt => rt.UserID == userId).ToListAsync();
-            _context.RefreshTokens.RemoveRange(refreshTokens);
-
-            // Kullanıcıyı sil
-            var result = await _userManager.DeleteAsync(user);
+            var result = await _userManager.SetLockoutEnabledAsync(user, true);
             if (!result.Succeeded)
             {
-                return new DeleteUserResponse
+                return new LockoutUserResponse
                 {
                     Success = false,
-                    Message = "Failed to delete user"
+                    Message = "Failed to lockout user"
                 };
             }
 
-            await _context.SaveChangesAsync();
+            // Kullanıcıyı hemen kilitle (süresiz)
+            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
 
-            return new DeleteUserResponse
+            return new LockoutUserResponse
             {
                 Success = true,
-                Message = "User successfully deleted"
+                Message = "User successfully locked out"
+            };
+        }
+
+        public async Task<LockoutUserResponse> DisableLockoutAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new LockoutUserResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                };
+            }
+
+            var result = await _userManager.SetLockoutEnabledAsync(user, false);
+            if (!result.Succeeded)
+            {
+                return new LockoutUserResponse
+                {
+                    Success = false,
+                    Message = "Failed to disable lockout"
+                };
+            }
+
+            // Kilit süresini sıfırla
+            await _userManager.SetLockoutEndDateAsync(user, null);
+
+            return new LockoutUserResponse
+            {
+                Success = true,
+                Message = "User lockout successfully disabled"
             };
         }
 
         public async Task<List<AllUsersResponse>> GetAllUsersAsync()
         {
             var users = await _userManager.Users
+                .Where(u => !u.LockoutEnabled || u.LockoutEnd == null || u.LockoutEnd < DateTimeOffset.UtcNow)
                 .Select(u => new AllUsersResponse
                 {
                     Id = u.Id,
