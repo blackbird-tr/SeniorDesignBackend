@@ -1,6 +1,8 @@
 using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
+using AccountService.Domain.Enums;
+using System;
 using AccountService.Application.Features.VehicleAd.Queries.GetAll;
 
 namespace AccountService.Application.Features.VehicleAd.Commands.Create
@@ -37,7 +39,10 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
                 userId = request.CarrierId,
                 VehicleType = request.VehicleType,
                 Capacity = request.Capacity,
-                AdDate = request.AdDate
+                AdDate = request.AdDate,
+                Admin1Id = "0",
+                Admin2Id = "0",
+                Status = (byte)AdStatus.Pending
             };
 
             var createdAd = await _vehicleAdService.AddAsync(vehicleAd);
@@ -54,7 +59,10 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Create
                 VehicleType = createdAd.VehicleType,
                 Capacity = createdAd.Capacity,
                 CreatedDate = createdAd.CreatedDate,
-                AdDate = createdAd.AdDate
+                AdDate = createdAd.AdDate,
+                Admin1Id = createdAd.Admin1Id,
+                Admin2Id = createdAd.Admin2Id,
+                Status = ((AdStatus)createdAd.Status).ToString()
             };
         }
     }

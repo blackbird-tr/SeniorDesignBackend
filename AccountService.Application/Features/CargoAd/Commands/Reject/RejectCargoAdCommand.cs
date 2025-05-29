@@ -30,6 +30,8 @@ namespace AccountService.Application.Features.CargoAd.Commands.Reject
             if (cargoAd == null)
                 throw new Exception("Cargo ad not found");
 
+            if (cargoAd.Admin1Id != "0" && cargoAd.Admin2Id != "0")
+                throw new Exception("Daha önce karar verildi");
             // Admin ID'sini -1 olarak set et
             if (cargoAd.Admin1Id == "0")
             {

@@ -11,6 +11,9 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetAll
         public string Country { get; set; }
         public string City { get; set; }
         public float Capacity { get; set; }
+        public string Admin1Id { get; set; }
+        public string Admin2Id { get; set; }
+        public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime AdDate { get; set; }
     }
