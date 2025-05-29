@@ -9,6 +9,10 @@ using AccountService.Application.Features.VehicleAd.Queries.GetByCity;
 using AccountService.Application.Features.VehicleAd.Queries.GetByCountry;
 using AccountService.WebApi.Controller;
 using Microsoft.AspNetCore.Mvc;
+using AccountService.Application.Features.CargoAd.Commands.Accept;
+using AccountService.Application.Features.CargoAd.Commands.Reject;
+using AccountService.Application.Features.VehicleAd.Commands.Accept;
+using AccountService.Application.Features.VehicleAd.Commands.Reject;
 
 namespace AccountService.WebApi.Controllers
 {
@@ -79,5 +83,6 @@ namespace AccountService.WebApi.Controllers
         {
             return Ok(await Mediator.Send(new GetVehicleAdsByCountryQuery { Country = country }));
         }
+       
     }
 } 

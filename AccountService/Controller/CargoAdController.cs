@@ -101,22 +101,8 @@ namespace AccountService.WebApi.Controllers
         {
             return Ok(await Mediator.Send(new GetCargoAdsByDropCountryQuery { Country = country, Status = status }));
         }
-
-        [Authorize]
-        [HttpPost("accept")]
-        public async Task<IActionResult> AcceptCargoAd([FromBody] AcceptCargoAdCommand command)
-        {
-            var result = await Mediator.Send(command);
-            return Ok(result);
-        }
-
-        [Authorize]
-        [HttpPost("reject")]
-        public async Task<IActionResult> RejectCargoAd([FromBody] RejectCargoAdCommand command)
-        {
-            var result = await Mediator.Send(command);
-            return Ok(result);
-        }
+         
+        
  
     }
 } 

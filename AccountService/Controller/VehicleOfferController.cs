@@ -10,6 +10,10 @@ using AccountService.Application.Features.VehicleOffer.Queries.GetByVehicleAdId;
 using AccountService.Application.Features.VehicleOffer.Queries.GetPending;
 using System;
 using System.Threading.Tasks;
+using AccountService.Application.Features.VehicleAd.Commands.Accept;
+using AccountService.Application.Features.VehicleAd.Commands.Reject;
+using AccountService.Application.Features.VehicleOffer.Commands.Accept;
+using AccountService.Application.Features.VehicleOffer.Commands.Reject;
 
 namespace AccountService.WebApi.Controllers
 {
@@ -88,5 +92,6 @@ namespace AccountService.WebApi.Controllers
             var result = await Mediator.Send(query);
             return Ok(result);
         }
+       
     }
 } 

@@ -61,7 +61,10 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
                 VehicleAdId = request.VehicleAdId,
                 Message = request.Message,
                 Status = OfferStatus.Pending.ToString(),
-                ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7)
+                ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7),
+                Admin1Id = "0",
+                Admin2Id = "0",
+                AdminStatus = 0
             };
 
             var createdOffer = await _vehicleOfferService.AddAsync(offer);

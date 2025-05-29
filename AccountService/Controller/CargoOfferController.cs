@@ -10,6 +10,12 @@ using AccountService.Application.Features.CargoOffer.Queries.GetByCargoAdId;
 using AccountService.Application.Features.CargoOffer.Queries.GetPending;
 using System;
 using System.Threading.Tasks;
+using AccountService.Application.Features.VehicleAd.Commands.Accept;
+using AccountService.Application.Features.VehicleAd.Commands.Reject;
+using AccountService.Application.Features.VehicleOffer.Commands.Accept;
+using AccountService.Application.Features.VehicleOffer.Commands.Reject;
+using AccountService.Application.Features.CargoOffer.Commands.Accept;
+using AccountService.Application.Features.CargoOffer.Commands.Reject;
 
 namespace AccountService.WebApi.Controllers
 {
@@ -85,5 +91,6 @@ namespace AccountService.WebApi.Controllers
             var result = await Mediator.Send(new GetPendingCargoOffersQuery { UserId = userId });
             return Ok(result);
         }
+       
     }
 } 
