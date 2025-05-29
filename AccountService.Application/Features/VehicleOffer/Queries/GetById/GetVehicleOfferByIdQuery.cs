@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using AccountService.Application.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +8,7 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetById
     public class GetVehicleOfferByIdQuery : IRequest<VehicleOfferDto>
     {
         public int Id { get; set; }
+        public byte? Status { get; set; } // ✅ Status parametresi eklendi
     }
 
     public class GetVehicleOfferByIdQueryHandler : IRequestHandler<GetVehicleOfferByIdQuery, VehicleOfferDto>
@@ -23,7 +24,11 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetById
         {
             var offer = await _vehicleOfferService.GetByIdAsync(request.Id);
 
+            // ✅ Aktiflik ve durum kontrolü
             if (offer == null || !offer.Active)
+                return null;
+
+            if (request.Status.HasValue && offer.AdminStatus != request.Status.Value)
                 return null;
 
             return new VehicleOfferDto
@@ -40,4 +45,4 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetById
             };
         }
     }
-} 
+}

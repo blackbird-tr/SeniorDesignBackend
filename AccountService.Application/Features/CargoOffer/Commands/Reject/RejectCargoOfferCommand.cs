@@ -29,8 +29,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Reject
             if (cargoOffer == null)
                 throw new Exception("Kargo teklifi bulunamadı");
 
-            if (cargoOffer.Admin1Id != "0" && cargoOffer.Admin2Id != "0")
-                throw new Exception("Daha önce karar verildi");
+             
 
             if (cargoOffer.Admin1Id == "0")
                 cargoOffer.Admin1Id = "-1";

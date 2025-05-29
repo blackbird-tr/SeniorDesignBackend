@@ -2,6 +2,7 @@ using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Enums;
 using System;
+using AccountService.Domain.Entities;
 
 namespace AccountService.Application.Features.VehicleAd.Commands.Accept
 {
@@ -27,8 +28,7 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Accept
             if (vehicleAd == null)
                 throw new Exception("Vehicle ad not found");
 
-            if (vehicleAd.Admin1Id != "0" && vehicleAd.Admin2Id != "0")
-                throw new Exception("Daha önce karar verildi");
+          
 
             if (vehicleAd.Admin1Id == "0")
             {
@@ -36,6 +36,12 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Accept
             }
             else if (vehicleAd.Admin2Id == "0")
             {
+
+                if (vehicleAd.Admin1Id == request.AdminId)
+                {
+                    throw new Exception("Admin already accept  ");
+
+                }
                 vehicleAd.Admin2Id = request.AdminId;
             }
 

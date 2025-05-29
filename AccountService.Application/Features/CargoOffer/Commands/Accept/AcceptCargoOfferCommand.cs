@@ -29,8 +29,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Accept
             if (cargoOffer == null)
                 throw new Exception("Kargo teklifi bulunamadı");
 
-            if (cargoOffer.Admin1Id != "0" && cargoOffer.Admin2Id != "0")
-                throw new Exception("Daha önce karar verildi");
+            
 
             if (cargoOffer.Admin1Id == "0")
             {
@@ -38,6 +37,12 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Accept
             }
             else if (cargoOffer.Admin2Id == "0")
             {
+
+                if (cargoOffer.Admin1Id == request.AdminId)
+                {
+                    throw new Exception("Admin already accept  ");
+
+                }
                 cargoOffer.Admin2Id = request.AdminId;
                 cargoOffer.AdminStatus = (byte)AdStatus.Accepted;
             }

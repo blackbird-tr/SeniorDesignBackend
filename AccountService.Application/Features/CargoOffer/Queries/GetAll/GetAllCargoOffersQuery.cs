@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using AccountService.Application.Interfaces;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,6 +9,7 @@ namespace AccountService.Application.Features.CargoOffer.Queries.GetAll
 {
     public class GetAllCargoOffersQuery : IRequest<List<CargoOfferDto>>
     {
+        public byte? Status { get; set; } // ✅ Status parametresi eklendi
     }
 
     public class GetAllCargoOffersQueryHandler : IRequestHandler<GetAllCargoOffersQuery, List<CargoOfferDto>>
@@ -23,6 +24,12 @@ namespace AccountService.Application.Features.CargoOffer.Queries.GetAll
         public async Task<List<CargoOfferDto>> Handle(GetAllCargoOffersQuery request, CancellationToken cancellationToken)
         {
             var offers = await _cargoOfferService.GetAllAsync();
+
+            // ✅ Status filtresi uygulanıyor
+            if (request.Status.HasValue)
+            {
+                offers = offers.Where(x => x.AdminStatus == request.Status.Value).ToList();
+            }
 
             return offers
                 .Where(x => x.Active)
@@ -42,4 +49,4 @@ namespace AccountService.Application.Features.CargoOffer.Queries.GetAll
                 .ToList();
         }
     }
-} 
+}

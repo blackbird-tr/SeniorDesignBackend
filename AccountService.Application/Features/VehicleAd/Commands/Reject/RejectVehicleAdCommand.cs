@@ -27,8 +27,7 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Reject
             if (vehicleAd == null)
                 throw new Exception("Vehicle ad not found");
 
-            if (vehicleAd.Admin1Id != "0" && vehicleAd.Admin2Id != "0")
-                throw new Exception("Daha önce karar verildi");
+            
 
             // Admin ID'sini -1 olarak set et
             if (vehicleAd.Admin1Id == "0")

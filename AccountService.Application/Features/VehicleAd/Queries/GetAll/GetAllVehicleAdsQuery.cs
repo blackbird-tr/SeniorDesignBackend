@@ -1,9 +1,12 @@
-using MediatR;
+﻿using MediatR;
 using AccountService.Application.Interfaces;
 
 namespace AccountService.Application.Features.VehicleAd.Queries.GetAll
 {
-    public class GetAllVehicleAdsQuery : IRequest<List<VehicleAdDto>> { }
+    public class GetAllVehicleAdsQuery : IRequest<List<VehicleAdDto>>
+    {
+        public byte? Status { get; set; } // ✅ Status parametresi eklendi
+    }
 
     public class GetAllVehicleAdsQueryHandler : IRequestHandler<GetAllVehicleAdsQuery, List<VehicleAdDto>>
     {
@@ -18,13 +21,19 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetAll
         {
             var vehicleAds = await _vehicleAdService.GetAllAsync();
 
+            // ✅ Status filtresi uygulandı
+            if (request.Status.HasValue)
+            {
+                vehicleAds = vehicleAds.Where(x => x.Status == request.Status.Value).ToList();
+            }
+
             return vehicleAds
                 .Where(x => x.Active)
                 .Select(ad => new VehicleAdDto
                 {
                     Id = ad.Id,
                     Title = ad.Title,
-                    Description = ad.Desc,  
+                    Description = ad.Desc,
                     City = ad.City,
                     Country = ad.Country,
                     CarrierId = ad.userId,
@@ -37,4 +46,4 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetAll
                 .ToList();
         }
     }
-} 
+}

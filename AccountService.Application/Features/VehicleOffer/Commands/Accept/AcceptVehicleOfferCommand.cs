@@ -29,8 +29,7 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
             if (vehicleOffer == null)
                 throw new Exception("Araç teklifi bulunamadı");
 
-            if (vehicleOffer.Admin1Id != "0" && vehicleOffer.Admin2Id != "0")
-                throw new Exception("Daha önce karar verildi");
+             
 
             if (vehicleOffer.Admin1Id == "0")
             {
@@ -38,6 +37,12 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
             }
             else if (vehicleOffer.Admin2Id == "0")
             {
+
+                if (vehicleOffer.Admin1Id == request.AdminId)
+                {
+                    throw new Exception("Admin already accept  ");
+
+                }
                 vehicleOffer.Admin2Id = request.AdminId;
                 vehicleOffer.AdminStatus = (byte)OfferStatus.Accepted;
             }

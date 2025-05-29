@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using AccountService.Application.Interfaces;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,6 +10,7 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetByVehicleA
     public class GetVehicleOffersByVehicleAdIdQuery : IRequest<List<VehicleOfferDto>>
     {
         public int VehicleAdId { get; set; }
+        public byte? Status { get; set; } // ✅ Status parametresi eklendi
     }
 
     public class GetVehicleOffersByVehicleAdIdQueryHandler : IRequestHandler<GetVehicleOffersByVehicleAdIdQuery, List<VehicleOfferDto>>
@@ -24,6 +25,12 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetByVehicleA
         public async Task<List<VehicleOfferDto>> Handle(GetVehicleOffersByVehicleAdIdQuery request, CancellationToken cancellationToken)
         {
             var offers = await _vehicleOfferService.GetByVehicleAdIdAsync(request.VehicleAdId);
+
+            // ✅ Status filtresi uygulanıyor
+            if (request.Status.HasValue)
+            {
+                offers = offers.Where(x => x.AdminStatus == request.Status.Value).ToList();
+            }
 
             return offers
                 .Where(x => x.Active)
@@ -42,4 +49,4 @@ namespace AccountService.Application.Features.VehicleOffer.Queries.GetByVehicleA
                 .ToList();
         }
     }
-} 
+}

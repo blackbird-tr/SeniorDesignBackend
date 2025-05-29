@@ -48,16 +48,16 @@ namespace AccountService.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetAllCargoOffersQuery());
+            var result = await Mediator.Send(new GetAllCargoOffersQuery { Status = status });
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int id, [FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetCargoOfferByIdQuery { Id = id });
+            var result = await Mediator.Send(new GetCargoOfferByIdQuery { Id = id, Status = status });
             if (result == null)
                 return NotFound();
 
@@ -65,32 +65,31 @@ namespace AccountService.WebApi.Controllers
         }
 
         [HttpGet("sender/{senderId}")]
-        public async Task<IActionResult> GetBySenderId(string senderId)
+        public async Task<IActionResult> GetBySenderId(string senderId, [FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetCargoOffersBySenderIdQuery { SenderId = senderId });
+            var result = await Mediator.Send(new GetCargoOffersBySenderIdQuery { SenderId = senderId, Status = status });
             return Ok(result);
         }
 
         [HttpGet("receiver/{receiverId}")]
-        public async Task<IActionResult> GetByReceiverId(string receiverId)
+        public async Task<IActionResult> GetByReceiverId(string receiverId, [FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetCargoOffersByReceiverIdQuery { ReceiverId = receiverId });
+            var result = await Mediator.Send(new GetCargoOffersByReceiverIdQuery { ReceiverId = receiverId, Status = status });
             return Ok(result);
         }
 
         [HttpGet("cargo-ad/{cargoAdId}")]
-        public async Task<IActionResult> GetByCargoAdId(int cargoAdId)
+        public async Task<IActionResult> GetByCargoAdId(int cargoAdId, [FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetCargoOffersByCargoAdIdQuery { CargoAdId = cargoAdId });
+            var result = await Mediator.Send(new GetCargoOffersByCargoAdIdQuery { CargoAdId = cargoAdId, Status = status });
             return Ok(result);
         }
 
         [HttpGet("pending/{userId}")]
-        public async Task<IActionResult> GetPendingOffers(string userId)
+        public async Task<IActionResult> GetPendingOffers(string userId, [FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetPendingCargoOffersQuery { UserId = userId });
+            var result = await Mediator.Send(new GetPendingCargoOffersQuery { UserId = userId, Status = status });
             return Ok(result);
         }
-       
     }
-} 
+}

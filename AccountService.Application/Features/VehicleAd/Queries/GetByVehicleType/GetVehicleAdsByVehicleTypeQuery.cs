@@ -1,12 +1,17 @@
-using MediatR;
+﻿using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Application.Features.VehicleAd.Queries.GetAll;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace AccountService.Application.Features.VehicleAd.Queries.GetByVehicleType
 {
     public class GetVehicleAdsByVehicleTypeQuery : IRequest<List<VehicleAdDto>>
     {
         public string VehicleType { get; set; }
+        public byte? Status { get; set; } // ✅ Status parametresi eklendi
     }
 
     public class GetVehicleAdsByVehicleTypeQueryHandler : IRequestHandler<GetVehicleAdsByVehicleTypeQuery, List<VehicleAdDto>>
@@ -21,6 +26,12 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetByVehicleType
         public async Task<List<VehicleAdDto>> Handle(GetVehicleAdsByVehicleTypeQuery request, CancellationToken cancellationToken)
         {
             var vehicleAds = await _vehicleAdService.GetByVehicleTypeAsync(request.VehicleType);
+
+            // ✅ Status filtresi uygulanıyor
+            if (request.Status.HasValue)
+            {
+                vehicleAds = vehicleAds.Where(ad => ad.Status == request.Status.Value).ToList();
+            }
 
             return vehicleAds
                 .Where(x => x.Active)
@@ -40,4 +51,4 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetByVehicleType
                 .ToList();
         }
     }
-} 
+}

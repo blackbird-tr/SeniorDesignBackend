@@ -29,8 +29,7 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Reject
             if (vehicleOffer == null)
                 throw new Exception("Araç teklifi bulunamadı");
 
-            if (vehicleOffer.Admin1Id != "0" && vehicleOffer.Admin2Id != "0")
-                throw new Exception("Daha önce karar verildi");
+            
 
             if (vehicleOffer.Admin1Id == "0")
                 vehicleOffer.Admin1Id = "-1";
