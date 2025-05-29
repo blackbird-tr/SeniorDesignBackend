@@ -13,16 +13,19 @@ using AccountService.Application.Features.Users.Queries.GetUserByIdQuery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AccountService.Hubs;
+using AccountService.Application.Interfaces;
 
 namespace AccountService.WebApi.Controller
 {
     public class UserController : BaseApiController
     {
         private readonly NotificationService _notificationService;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(NotificationService notificationService)
+        public UserController(NotificationService notificationService, IUserRepository userRepository)
         {
             _notificationService = notificationService;
+            _userRepository = userRepository;
         }
 
         [AllowAnonymous]
@@ -155,6 +158,14 @@ namespace AccountService.WebApi.Controller
         {
             var users = _notificationService.GetOnlineUsers();
             return Ok(users.Select(u => new { UserId = u.Key, ConnectionId = u.Value }));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("AllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            return Ok(users);
         }
     }
 }

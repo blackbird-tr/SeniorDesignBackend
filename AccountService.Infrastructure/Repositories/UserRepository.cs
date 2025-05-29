@@ -358,5 +358,18 @@ namespace AccountService.Infrastructure.Repositories
             };
         }
 
+        public async Task<List<AllUsersResponse>> GetAllUsersAsync()
+        {
+            var users = await _userManager.Users
+                .Select(u => new AllUsersResponse
+                {
+                    Id = u.Id,
+                    UserName = u.UserName
+                })
+                .ToListAsync();
+
+            return users;
+        }
+
     }
 }

@@ -24,5 +24,6 @@ namespace AccountService.Application.Interfaces
         Task<GetUserByIdResponse> GetUserByIdAsync(GetUserByIdRequest getUserByIdRequest);
         Task<UpdateUserResponse> UpdateUser(UpdateUserRequest updateUserRequest);
         Task<DeleteUserResponse> DeleteUserAsync(string userId);
+        Task<List<AllUsersResponse>> GetAllUsersAsync();
     }
 }
