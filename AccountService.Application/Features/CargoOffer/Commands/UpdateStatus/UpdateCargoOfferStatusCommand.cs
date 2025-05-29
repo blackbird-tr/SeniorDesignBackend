@@ -44,7 +44,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.UpdateStatus
                     case "Accepted":
                         message = $"{offer.CargoAd.Title} ilanına verdiğiniz teklif kabul edildi.";
                         await _notificationService.CreateNotificationAsync(
-                            offer.SenderId,
+                            offer.ReceiverId,
                             title,
                             message,
                             NotificationType.CargoOffer,
@@ -55,7 +55,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.UpdateStatus
                     case "Rejected":
                         message = $"{offer.CargoAd.Title} ilanına verdiğiniz teklif reddedildi.";
                         await _notificationService.CreateNotificationAsync(
-                            offer.SenderId,
+                            offer.ReceiverId,
                             title,
                             message,
                             NotificationType.CargoOffer,
@@ -67,7 +67,7 @@ namespace AccountService.Application.Features.CargoOffer.Commands.UpdateStatus
                         message = $"{offer.CargoAd.Title} ilanına verilen teklif iptal edildi.";
                         // Hem gönderen hem alıcıya bildirim gönder
                         await _notificationService.CreateNotificationAsync(
-                            offer.SenderId,
+                            offer.ReceiverId,
                             title,
                             message,
                             NotificationType.CargoOffer,
