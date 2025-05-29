@@ -17,19 +17,24 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
     public class AcceptVehicleOfferCommandHandler : IRequestHandler<AcceptVehicleOfferCommand, VehicleOfferDto>
     {
         private readonly IVehicleOfferService _vehicleOfferService;
+        private readonly IAdminService _adminService;
 
-        public AcceptVehicleOfferCommandHandler(IVehicleOfferService vehicleOfferService)
+        public AcceptVehicleOfferCommandHandler(
+            IVehicleOfferService vehicleOfferService,
+            IAdminService adminService)
         {
             _vehicleOfferService = vehicleOfferService;
+            _adminService = adminService;
         }
 
         public async Task<VehicleOfferDto> Handle(AcceptVehicleOfferCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var vehicleOffer = await _vehicleOfferService.GetByIdAsync(request.Id);
             if (vehicleOffer == null)
                 throw new Exception("Araç teklifi bulunamadı");
-
-             
 
             if (vehicleOffer.Admin1Id == "0")
             {
@@ -37,19 +42,18 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
             }
             else if (vehicleOffer.Admin2Id == "0")
             {
-
                 if (vehicleOffer.Admin1Id == request.AdminId)
                 {
-                    throw new Exception("Admin already accept  ");
-
+                    throw new Exception("Admin already accept");
                 }
                 vehicleOffer.Admin2Id = request.AdminId;
                 vehicleOffer.AdminStatus = (byte)OfferStatus.Accepted;
             }
+
             await _vehicleOfferService.UpdateAsync(vehicleOffer);
 
             // Güncellenmiş veriyi tekrar çek
-            var updatedOffer = await _vehicleOfferService.GetByIdAsync(request.Id); 
+            var updatedOffer = await _vehicleOfferService.GetByIdAsync(request.Id);
 
             return new VehicleOfferDto
             {
@@ -58,7 +62,7 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Accept
                 ReceiverId = updatedOffer.ReceiverId,
                 VehicleAdId = updatedOffer.VehicleAdId,
                 Message = updatedOffer.Message,
-                Status = updatedOffer.Status,   
+                Status = updatedOffer.Status,
                 ExpiryDate = updatedOffer.ExpiryDate,
                 CreatedDate = updatedOffer.CreatedDate,
                 Admin1Id = updatedOffer.Admin1Id,

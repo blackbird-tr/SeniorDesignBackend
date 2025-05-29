@@ -17,19 +17,24 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Reject
     public class RejectVehicleOfferCommandHandler : IRequestHandler<RejectVehicleOfferCommand, VehicleOfferDto>
     {
         private readonly IVehicleOfferService _vehicleOfferService;
+        private readonly IAdminService _adminService;
 
-        public RejectVehicleOfferCommandHandler(IVehicleOfferService vehicleOfferService)
+        public RejectVehicleOfferCommandHandler(
+            IVehicleOfferService vehicleOfferService,
+            IAdminService adminService)
         {
             _vehicleOfferService = vehicleOfferService;
+            _adminService = adminService;
         }
 
         public async Task<VehicleOfferDto> Handle(RejectVehicleOfferCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var vehicleOffer = await _vehicleOfferService.GetByIdAsync(request.Id);
             if (vehicleOffer == null)
                 throw new Exception("Araç teklifi bulunamadı");
-
-            
 
             if (vehicleOffer.Admin1Id == "0")
                 vehicleOffer.Admin1Id = "-1";

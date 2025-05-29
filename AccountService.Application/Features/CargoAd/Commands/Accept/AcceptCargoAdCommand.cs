@@ -17,19 +17,25 @@ namespace AccountService.Application.Features.CargoAd.Commands.Accept
     public class AcceptCargoAdCommandHandler : IRequestHandler<AcceptCargoAdCommand, CargoAdDto>
     {
         private readonly ICargoAdService _cargoAdService;
+        private readonly IAdminService _adminService;
 
-        public AcceptCargoAdCommandHandler(ICargoAdService cargoAdService)
+        public AcceptCargoAdCommandHandler(
+            ICargoAdService cargoAdService,
+            IAdminService adminService)
         {
             _cargoAdService = cargoAdService;
+            _adminService = adminService;
         }
 
         public async Task<CargoAdDto> Handle(AcceptCargoAdCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var cargoAd = await _cargoAdService.GetByIdAsync(request.CargoId);
 
             if (cargoAd == null)
                 throw new Exception("Cargo ad not found");
- 
 
             if (cargoAd.Admin1Id == "0")
             {
@@ -39,8 +45,7 @@ namespace AccountService.Application.Features.CargoAd.Commands.Accept
             {
                 if (cargoAd.Admin1Id == request.AdminId)
                 {
-                    throw new Exception("Admin already accept  ");
-
+                    throw new Exception("Admin already accept");
                 }
                 cargoAd.Admin2Id = request.AdminId;
             }

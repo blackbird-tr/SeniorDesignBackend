@@ -17,19 +17,24 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Accept
     public class AcceptCargoOfferCommandHandler : IRequestHandler<AcceptCargoOfferCommand, CargoOfferDto>
     {
         private readonly ICargoOfferService _cargoOfferService;
+        private readonly IAdminService _adminService;
 
-        public AcceptCargoOfferCommandHandler(ICargoOfferService cargoOfferService)
+        public AcceptCargoOfferCommandHandler(
+            ICargoOfferService cargoOfferService,
+            IAdminService adminService)
         {
             _cargoOfferService = cargoOfferService;
+            _adminService = adminService;
         }
 
         public async Task<CargoOfferDto> Handle(AcceptCargoOfferCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var cargoOffer = await _cargoOfferService.GetByIdAsync(request.Id);
             if (cargoOffer == null)
                 throw new Exception("Kargo teklifi bulunamadı");
-
-            
 
             if (cargoOffer.Admin1Id == "0")
             {
@@ -37,11 +42,9 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Accept
             }
             else if (cargoOffer.Admin2Id == "0")
             {
-
                 if (cargoOffer.Admin1Id == request.AdminId)
                 {
-                    throw new Exception("Admin already accept  ");
-
+                    throw new Exception("Admin already accept");
                 }
                 cargoOffer.Admin2Id = request.AdminId;
                 cargoOffer.AdminStatus = (byte)AdStatus.Accepted;

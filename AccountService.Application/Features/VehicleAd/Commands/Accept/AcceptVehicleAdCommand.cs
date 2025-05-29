@@ -15,20 +15,25 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Accept
     public class AcceptVehicleAdCommandHandler : IRequestHandler<AcceptVehicleAdCommand, bool>
     {
         private readonly IVehicleAdService _vehicleAdService;
+        private readonly IAdminService _adminService;
 
-        public AcceptVehicleAdCommandHandler(IVehicleAdService vehicleAdService)
+        public AcceptVehicleAdCommandHandler(
+            IVehicleAdService vehicleAdService,
+            IAdminService adminService)
         {
             _vehicleAdService = vehicleAdService;
+            _adminService = adminService;
         }
 
         public async Task<bool> Handle(AcceptVehicleAdCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var vehicleAd = await _vehicleAdService.GetByIdAsync(request.VehicleAdId);
 
             if (vehicleAd == null)
                 throw new Exception("Vehicle ad not found");
-
-          
 
             if (vehicleAd.Admin1Id == "0")
             {
@@ -36,11 +41,9 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Accept
             }
             else if (vehicleAd.Admin2Id == "0")
             {
-
                 if (vehicleAd.Admin1Id == request.AdminId)
                 {
-                    throw new Exception("Admin already accept  ");
-
+                    throw new Exception("Admin already accept");
                 }
                 vehicleAd.Admin2Id = request.AdminId;
             }

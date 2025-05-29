@@ -17,19 +17,24 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Reject
     public class RejectCargoOfferCommandHandler : IRequestHandler<RejectCargoOfferCommand, CargoOfferDto>
     {
         private readonly ICargoOfferService _cargoOfferService;
+        private readonly IAdminService _adminService;
 
-        public RejectCargoOfferCommandHandler(ICargoOfferService cargoOfferService)
+        public RejectCargoOfferCommandHandler(
+            ICargoOfferService cargoOfferService,
+            IAdminService adminService)
         {
             _cargoOfferService = cargoOfferService;
+            _adminService = adminService;
         }
 
         public async Task<CargoOfferDto> Handle(RejectCargoOfferCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var cargoOffer = await _cargoOfferService.GetByIdAsync(request.Id);
             if (cargoOffer == null)
                 throw new Exception("Kargo teklifi bulunamadı");
-
-             
 
             if (cargoOffer.Admin1Id == "0")
                 cargoOffer.Admin1Id = "-1";

@@ -14,20 +14,25 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Reject
     public class RejectVehicleAdCommandHandler : IRequestHandler<RejectVehicleAdCommand, bool>
     {
         private readonly IVehicleAdService _vehicleAdService;
+        private readonly IAdminService _adminService;
 
-        public RejectVehicleAdCommandHandler(IVehicleAdService vehicleAdService)
+        public RejectVehicleAdCommandHandler(
+            IVehicleAdService vehicleAdService,
+            IAdminService adminService)
         {
             _vehicleAdService = vehicleAdService;
+            _adminService = adminService;
         }
 
         public async Task<bool> Handle(RejectVehicleAdCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var vehicleAd = await _vehicleAdService.GetByIdAsync(request.VehicleAdId);
 
             if (vehicleAd == null)
                 throw new Exception("Vehicle ad not found");
-
-            
 
             // Admin ID'sini -1 olarak set et
             if (vehicleAd.Admin1Id == "0")

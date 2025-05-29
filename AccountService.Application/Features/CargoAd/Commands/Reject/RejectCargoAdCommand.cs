@@ -17,14 +17,21 @@ namespace AccountService.Application.Features.CargoAd.Commands.Reject
     public class RejectCargoAdCommandHandler : IRequestHandler<RejectCargoAdCommand, CargoAdDto>
     {
         private readonly ICargoAdService _cargoAdService;
+        private readonly IAdminService _adminService;
 
-        public RejectCargoAdCommandHandler(ICargoAdService cargoAdService)
+        public RejectCargoAdCommandHandler(
+            ICargoAdService cargoAdService,
+            IAdminService adminService)
         {
             _cargoAdService = cargoAdService;
+            _adminService = adminService;
         }
 
         public async Task<CargoAdDto> Handle(RejectCargoAdCommand request, CancellationToken cancellationToken)
         {
+            if (!await _adminService.ExistsAsync(request.AdminId))
+                throw new Exception("Geçersiz admin ID");
+
             var cargoAd = await _cargoAdService.GetByIdAsync(request.CargoId);
 
             if (cargoAd == null)
