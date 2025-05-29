@@ -32,6 +32,9 @@ namespace AccountService.Domain.Entities
 
         [Required]
         public DateTime AdDate { get; set; }
+        public string Admin1Id { get; set; }
+        public string Admin2Id { get; set; }
+        public byte Status { get; set; }
 
         // Navigation properties
         public User Customer { get; set; } 
