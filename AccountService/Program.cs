@@ -6,6 +6,8 @@ using AccountService.Infrastructure.Services;
 using AccountService.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +57,32 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Global exception handler
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        var error = context.Features.Get<IExceptionHandlerFeature>();
+        if (error != null)
+        {
+            var ex = error.Error;
+            var errorResponse = new
+            {
+                StatusCode = 500,
+                Message = ex.Message,
+                DetailedMessage = ex.ToString(),
+                Source = ex.Source,
+                StackTrace = ex.StackTrace
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+        }
+    });
+});
 
 app.UseCors("AllowAll");
 
