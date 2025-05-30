@@ -389,11 +389,12 @@ namespace AccountService.Infrastructure.Repositories
         public async Task<List<AllUsersResponse>> GetAllUsersAsync()
         {
             var users = await _userManager.Users
-                .Where(u => !u.LockoutEnabled || u.LockoutEnd == null || u.LockoutEnd < DateTimeOffset.UtcNow)
                 .Select(u => new AllUsersResponse
                 {
                     Id = u.Id,
-                    UserName = u.UserName
+                    UserName = u.UserName,
+                    IsLocked = u.LockoutEnabled && u.LockoutEnd > DateTimeOffset.UtcNow,
+                    LockoutEnd = u.LockoutEnd
                 })
                 .ToListAsync();
 

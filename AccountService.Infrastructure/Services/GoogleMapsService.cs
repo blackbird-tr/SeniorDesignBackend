@@ -69,11 +69,11 @@ namespace AccountService.Infrastructure.Services
             // Kargo tipine göre değerleri al
             var (complexity, optimalLoad, maxLegalLoad, vehicleType) = _cargoTypeValues[cargoTypeEnum];
 
-            // Yük ağırlığı kontrolü
-            if (weight > maxLegalLoad)
-            {
-                throw new ArgumentException($"Weight exceeds maximum legal load for {cargoType} cargo type");
-            }
+            //// Yük ağırlığı kontrolü
+            //if (weight > maxLegalLoad)
+            //{
+            //    throw new ArgumentException($"Weight exceeds maximum legal load for {cargoType} cargo type");
+            //}
 
             // Google Maps API'den süre bilgisini al
             var distanceMatrix = await GetDistanceMatrixAsync(origin, destination);

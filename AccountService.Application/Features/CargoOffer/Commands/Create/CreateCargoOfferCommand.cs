@@ -53,14 +53,21 @@ namespace AccountService.Application.Features.CargoOffer.Commands.Create
             if (request.Message.Length > 500)
                 throw new ArgumentException("Mesaj 500 karakterden uzun olamaz");
 
-            
+           
 
             // Kargo ilanı için fiyat kontrolü
             var cargoAd = await _cargoAdService.GetByIdAsync(request.CargoAdId);
             if (cargoAd == null)
                 throw new ArgumentException("Kargo ilanı bulunamadı");
 
-             
+            var minPrice = cargoAd.Price * 0.8m; // %20 altı
+            var maxPrice = cargoAd.Price * 1.5m; // %50 üstü
+
+            if (request.Price < minPrice)
+                throw new ArgumentException($"Teklif fiyatı ilan fiyatının en az %80'i olmalıdır. Minimum fiyat: {minPrice}");
+
+            if (request.Price > maxPrice)
+                throw new ArgumentException($"Teklif fiyatı ilan fiyatının en fazla %150'si olabilir. Maksimum fiyat: {maxPrice}");
 
             var offer = new Domain.Entities.CargoOffer
             {

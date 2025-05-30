@@ -45,6 +45,9 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:5173") // Frontend'in çalıştığı port
             .WithOrigins("http://localhost:5174") // Frontend'in çalıştığı port
+            .WithOrigins("http://localhost:5174") // Frontend'in çalıştığı port
+            .WithOrigins("https://graduation-project-hazel.vercel.app")            // Frontend'in çalıştığı port
+            .WithOrigins("https://adminpaneli-logistify.onrender.com")            // Frontend'in çalıştığı port
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials(); // Credentials için bu gerekli
