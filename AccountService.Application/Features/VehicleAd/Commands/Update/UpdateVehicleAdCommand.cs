@@ -35,6 +35,9 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Update
             vehicleAd.City = request.City;
             vehicleAd.VehicleType = request.VehicleType;
             vehicleAd.Capacity = request.Capacity;
+            vehicleAd.Admin1Id = "0"; // Assuming 0 is the default admin ID
+            vehicleAd.Admin2Id = "0"; // Assuming 0 is the default admin ID
+            vehicleAd.Status = 0; // Assuming 0 is the default status
 
             await _vehicleAdService.UpdateAsync(vehicleAd);
             return true;

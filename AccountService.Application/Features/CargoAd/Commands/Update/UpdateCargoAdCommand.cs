@@ -45,6 +45,9 @@ namespace AccountService.Application.Features.CargoAd.Commands.Update
             cargoAd.PickCountry = request.PickCountry;
             cargoAd.Price = request.Price;
             cargoAd.IsExpired = request.IsExpired;
+            cargoAd.Admin1Id = "0";
+            cargoAd.Admin2Id = "0";
+                cargoAd.Status = 0; // Assuming 0 is the default status
 
             await _cargoAdService.UpdateAsync(cargoAd);
             return true;
