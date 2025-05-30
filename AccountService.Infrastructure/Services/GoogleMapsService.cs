@@ -18,7 +18,7 @@ namespace AccountService.Infrastructure.Services
             { CargoType.General, ("low", 20.0, 24.0, "Tarpaulin Truck") },        // TarpaulinTruck
             { CargoType.Fragile, ("high", 15.0, 18.0, "Box Truck") },        // BoxTruck
             { CargoType.Refrigerated, ("high", 18.0, 22.0, "Refrigerated Truck") },   // RefrigeratedTruck
-            { CargoType.Oversized, ("high", 30.0, 36.0, "Semi Trailer") },      // SemiTrailer
+            { CargoType.Oversized, ("high", 30.0, 36.0, "Semi-Trailer") },      // SemiTrailer
             { CargoType.LightFreight, ("low", 8.0, 10.0, "Light Truck") },    // LightTruck
             { CargoType.Containerized, ("high", 25.0, 30.0, "Container Carrier") },  // ContainerCarrier
             { CargoType.Liquid, ("high", 22.0, 26.0, "Tank Truck") },         // TankTruck
