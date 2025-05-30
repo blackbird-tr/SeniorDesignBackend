@@ -11,16 +11,24 @@ namespace AccountService.Domain.Entities
     { 
 
         public string   Title   { get; set; }
-        public string Desc { get; set; }
-        public int PickUpLocationId { get; set; }
+        public string Desc { get; set; } 
         [Required]
-        public string userId { get; set; } 
+        public string userId { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
 
         [Required]
         public string VehicleType { get; set; }
 
         [Required]
         public float Capacity { get; set; }
+        
+        [Required]
+        public DateTime AdDate { get; set; }
+
+        public string Admin1Id { get; set; }
+        public string Admin2Id { get; set; }
+        public byte Status { get; set; }
          
           
         // Navigation properties

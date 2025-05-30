@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace AccountService.Application.Features.CargoOffer 
 {
@@ -12,6 +12,9 @@ namespace AccountService.Application.Features.CargoOffer
         public decimal Price { get; set; }
         public string Message { get; set; }
         public string Status { get; set; }
+        public string Admin1Id { get; set; }  // İlk admin onayı
+        public string Admin2Id { get; set; }  // İkinci admin onayı
+        public string AdminStatus { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public DateTime CreatedDate { get; set; }
     }

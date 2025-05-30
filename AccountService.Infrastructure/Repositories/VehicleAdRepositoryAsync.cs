@@ -44,11 +44,19 @@ namespace AccountService.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<VehicleAd>> GetByPickUpLocationAsync(int pickUpLocationId)
+        public async Task<List<VehicleAd>> GetByCityAsync(string city)
         {
             return await _context.VehicleAds
                 .Include(v => v.Carrier)
-                .Where(v => v.PickUpLocationId == pickUpLocationId && v.Active)
+                .Where(v => v.City == city && v.Active)
+                .ToListAsync();
+        }
+
+        public async Task<List<VehicleAd>> GetByCountryAsync(string country)
+        {
+            return await _context.VehicleAds
+                .Include(v => v.Carrier)
+                .Where(v => v.Country == country && v.Active)
                 .ToListAsync();
         }
     }

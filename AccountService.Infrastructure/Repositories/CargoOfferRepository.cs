@@ -5,6 +5,7 @@ using AccountService.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 namespace AccountService.Infrastructure.Repositories
@@ -73,17 +74,18 @@ namespace AccountService.Infrastructure.Repositories
                 .Include(o => o.Receiver)
                 .Include(o => o.CargoAd)
                 .Where(o => (o.SenderId == userId || o.ReceiverId == userId) 
-                    && o.Status == OfferStatus.Pending 
+                    && o.Status == OfferStatus.Pending.ToString()
                     && o.Active)
                 .ToListAsync();
         }
 
-        public async Task<bool> UpdateOfferStatusAsync(int offerId, OfferStatus status)
+        public async Task<bool> UpdateOfferStatusAsync(int offerId, string status)
         {
             var offer = await GetByIdAsync(offerId);
             if (offer == null) return false;
 
             offer.Status = status;
+            _context.Update(offer);
             await _context.SaveChangesAsync();
             return true;
         }

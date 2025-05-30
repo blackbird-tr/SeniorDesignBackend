@@ -1,13 +1,18 @@
-using Microsoft.AspNetCore.Mvc;
-using AccountService.WebApi.Controller;
 using AccountService.Application.Features.VehicleAd.Commands.Create;
-using AccountService.Application.Features.VehicleAd.Commands.Update;
 using AccountService.Application.Features.VehicleAd.Commands.Delete;
+using AccountService.Application.Features.VehicleAd.Commands.Update;
 using AccountService.Application.Features.VehicleAd.Queries.GetAll;
-using AccountService.Application.Features.VehicleAd.Queries.GetById;
 using AccountService.Application.Features.VehicleAd.Queries.GetByCarrierId;
+using AccountService.Application.Features.VehicleAd.Queries.GetById;
 using AccountService.Application.Features.VehicleAd.Queries.GetByVehicleType;
-using AccountService.Application.Features.VehicleAd.Queries.GetByPickUpLocation;
+using AccountService.Application.Features.VehicleAd.Queries.GetByCity;
+using AccountService.Application.Features.VehicleAd.Queries.GetByCountry;
+using AccountService.WebApi.Controller;
+using Microsoft.AspNetCore.Mvc;
+using AccountService.Application.Features.CargoAd.Commands.Accept;
+using AccountService.Application.Features.CargoAd.Commands.Reject;
+using AccountService.Application.Features.VehicleAd.Commands.Accept;
+using AccountService.Application.Features.VehicleAd.Commands.Reject;
 
 namespace AccountService.WebApi.Controllers
 {
@@ -16,15 +21,15 @@ namespace AccountService.WebApi.Controllers
     public class VehicleAdController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetAllVehicleAdsQuery()));
+            return Ok(await Mediator.Send(new GetAllVehicleAdsQuery { Status = status }));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int id, [FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetVehicleAdByIdQuery { Id = id });
+            var result = await Mediator.Send(new GetVehicleAdByIdQuery { Id = id, Status = status });
             if (result == null)
                 return NotFound();
 
@@ -56,21 +61,27 @@ namespace AccountService.WebApi.Controllers
         }
 
         [HttpGet("by-carrier/{carrierId}")]
-        public async Task<IActionResult> GetByCarrierId(string carrierId)
+        public async Task<IActionResult> GetByCarrierId(string carrierId, [FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetVehicleAdsByCarrierIdQuery { CarrierId = carrierId }));
+            return Ok(await Mediator.Send(new GetVehicleAdsByCarrierIdQuery { CarrierId = carrierId, Status = status }));
         }
 
         [HttpGet("by-type/{vehicleType}")]
-        public async Task<IActionResult> GetByVehicleType(string vehicleType)
+        public async Task<IActionResult> GetByVehicleType(string vehicleType, [FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetVehicleAdsByVehicleTypeQuery { VehicleType = vehicleType }));
+            return Ok(await Mediator.Send(new GetVehicleAdsByVehicleTypeQuery { VehicleType = vehicleType, Status = status }));
         }
 
-        [HttpGet("by-location/{pickUpLocationId}")]
-        public async Task<IActionResult> GetByPickUpLocation(int pickUpLocationId)
+        [HttpGet("by-city/{city}")]
+        public async Task<IActionResult> GetByCity(string city, [FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetVehicleAdsByPickUpLocationQuery { PickUpLocationId = pickUpLocationId }));
+            return Ok(await Mediator.Send(new GetVehicleAdsByCityQuery { City = city, Status = status }));
+        }
+
+        [HttpGet("by-country/{country}")]
+        public async Task<IActionResult> GetByCountry(string country, [FromQuery] byte? status = null)
+        {
+            return Ok(await Mediator.Send(new GetVehicleAdsByCountryQuery { Country = country, Status = status }));
         }
     }
-} 
+}

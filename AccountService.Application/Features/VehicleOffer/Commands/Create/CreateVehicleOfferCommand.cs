@@ -1,6 +1,7 @@
 using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
+using AccountService.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,14 +21,17 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
     public class CreateVehicleOfferCommandHandler : IRequestHandler<CreateVehicleOfferCommand, VehicleOfferDto>
     {
         private readonly IVehicleOfferService _vehicleOfferService;
-        private readonly IVehicleAdService _vehicleAdService; 
+        private readonly IVehicleAdService _vehicleAdService;
+        private readonly INotificationService _notificationService;
 
         public CreateVehicleOfferCommandHandler(
             IVehicleOfferService vehicleOfferService,
-            IVehicleAdService vehicleAdService)
+            IVehicleAdService vehicleAdService,
+            INotificationService notificationService)
         {
             _vehicleOfferService = vehicleOfferService;
-            _vehicleAdService = vehicleAdService; 
+            _vehicleAdService = vehicleAdService;
+            _notificationService = notificationService;
         }
 
         public async Task<VehicleOfferDto> Handle(CreateVehicleOfferCommand request, CancellationToken cancellationToken)
@@ -56,11 +60,23 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
                 ReceiverId = request.ReceiverId,
                 VehicleAdId = request.VehicleAdId,
                 Message = request.Message,
-                Status = Domain.Enums.OfferStatus.Pending,
-                ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7)
+                Status = OfferStatus.Pending.ToString(),
+                ExpiryDate = request.ExpiryDate ?? DateTime.UtcNow.AddDays(7),
+                Admin1Id = "0",
+                Admin2Id = "0",
+                AdminStatus = 0
             };
 
             var createdOffer = await _vehicleOfferService.AddAsync(offer);
+
+            // Bildirim oluştur
+            await _notificationService.CreateNotificationAsync(
+                request.ReceiverId,
+                "Yeni Araç Teklifi",
+                $"{vehicleAd.Title} ilanınıza yeni bir teklif geldi.",
+                NotificationType.VehicleOffer,
+                createdOffer.Id
+            );
 
             return new VehicleOfferDto
             {
@@ -72,7 +88,10 @@ namespace AccountService.Application.Features.VehicleOffer.Commands.Create
                 Message = createdOffer.Message,
                 Status = createdOffer.Status.ToString(),
                 ExpiryDate = createdOffer.ExpiryDate,
-                CreatedDate = createdOffer.CreatedDate
+                CreatedDate = createdOffer.CreatedDate,
+                Admin1Id = createdOffer.Admin1Id,
+                Admin2Id = createdOffer.Admin2Id,
+                AdminStatus = ((AdStatus)createdOffer.AdminStatus).ToString()
             };
         }
     }

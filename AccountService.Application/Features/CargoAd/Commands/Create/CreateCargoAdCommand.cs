@@ -1,19 +1,25 @@
 using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Domain.Entities;
+using AccountService.Domain.Enums;
+using System;
 
 namespace AccountService.Application.Features.CargoAd.Commands.Create
 {
     public class CreateCargoAdCommand : IRequest<CargoAdDto>
     {
         public string UserId { get; set; }
-        public string Title { get; set; }
         public string Description { get; set; }
         public float? Weight { get; set; }
         public string CargoType { get; set; }
-        public int PickupLocationId { get; set; }
-        public int DropoffLocationId { get; set; }
+        public string Title { get; set; }
+        public string DropCountry { get; set; }
+        public string DropCity { get; set; }
+        public string PickCountry { get; set; }
+        public string PickCity { get; set; }
         public decimal Price { get; set; }
+        public string Currency { get; set; }
+        public DateTime AdDate { get; set; }
     }
 
     public class CreateCargoAdCommandHandler : IRequestHandler<CreateCargoAdCommand, CargoAdDto>
@@ -34,10 +40,17 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
                 Description = request.Description,
                 Weight = request.Weight,
                 CargoType = request.CargoType,
-                PickupLocationId = request.PickupLocationId,
-                DropoffLocationId = request.DropoffLocationId,
+                currency = request.Currency,
+                DropCity = request.DropCity,
+                DropCountry = request.DropCountry,
+                PickCity = request.PickCity,
+                PickCountry = request.PickCountry,
                 Price = request.Price,
-                IsExpired = false
+                IsExpired = false,
+                AdDate = request.AdDate,
+                Admin1Id = "0",
+                Admin2Id = "0",
+                Status = (byte)AdStatus.Pending
             };
 
             var createdAd = await _cargoAdService.AddAsync(cargoAd);
@@ -46,15 +59,23 @@ namespace AccountService.Application.Features.CargoAd.Commands.Create
             {
                 Id = createdAd.Id,
                 UserId = createdAd.UserId,
+                CustomerName = createdAd.Customer?.UserName,
                 Title = createdAd.Title,
                 Description = createdAd.Description,
                 Weight = createdAd.Weight,
                 CargoType = createdAd.CargoType,
-                PickupLocationId = createdAd.PickupLocationId,
-                DropoffLocationId = createdAd.DropoffLocationId,
+                DropCity = createdAd.DropCity,
+                DropCountry = createdAd.DropCountry,
+                PickCity = createdAd.PickCity,
+                PickCountry = createdAd.PickCountry,
+                currency = createdAd.currency,
                 Price = createdAd.Price,
                 IsExpired = createdAd.IsExpired,
-                CreatedDate = createdAd.CreatedDate
+                CreatedDate = createdAd.CreatedDate,
+                AdDate = createdAd.AdDate,
+                Admin1Id = createdAd.Admin1Id,
+                Admin2Id = createdAd.Admin2Id,
+                Status = ((AdStatus)createdAd.Status).ToString()
             };
         }
     }

@@ -2,12 +2,16 @@ namespace AccountService.Domain.Enums
 {
     public enum VehicleType
     {
-        Van = 1,
-        Truck = 2,
-        Pickup = 3,
-        RefrigeratedTruck = 4,
-        Tanker = 5,
-        Flatbed = 6,
-        Container = 7
+        TarpaulinTruck = 1,
+        BoxTruck = 2,
+        RefrigeratedTruck = 3,
+        SemiTrailer = 4,
+        LightTruck = 5,
+        ContainerCarrier = 6,
+        TankTruck = 7,
+        LowbedTrailer = 8,
+        DumpTruck = 9,
+        PanelVan = 10,
+        Others = 11,
     }
 } 

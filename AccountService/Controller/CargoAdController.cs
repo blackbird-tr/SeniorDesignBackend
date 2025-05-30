@@ -7,25 +7,35 @@ using AccountService.Application.Features.CargoAd.Queries.GetAll;
 using AccountService.Application.Features.CargoAd.Queries.GetById;
 using AccountService.Application.Features.CargoAd.Queries.GetByCustomerId;
 using AccountService.Application.Features.CargoAd.Queries.GetByCargoType;
-using AccountService.Application.Features.CargoAd.Queries.GetByPickupLocation;
-using AccountService.Application.Features.CargoAd.Queries.GetByDropoffLocation;
+using AccountService.Application.Features.CargoAd.Queries.GetByPickCity;
+using AccountService.Application.Features.CargoAd.Queries.GetByPickCountry;
+using AccountService.Application.Features.CargoAd.Queries.GetByDropCity;
+using AccountService.Application.Features.CargoAd.Queries.GetByDropCountry;
+using AccountService.Application.Features.CargoAd.Commands.Accept;
+using AccountService.Application.Features.CargoAd.Commands.Reject; 
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace AccountService.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class CargoAdController : BaseApiController
-    {
+    { 
+
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetAllCargoAdsQuery()));
+            var query = new GetAllCargoAdsQuery { Status = status };
+            var result = await Mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int id, [FromQuery] byte? status = null)
         {
-            var result = await Mediator.Send(new GetCargoAdByIdQuery { Id = id });
+            var result = await Mediator.Send(new GetCargoAdByIdQuery { Id = id, Status = status });
             if (result == null)
                 return NotFound();
 
@@ -57,27 +67,42 @@ namespace AccountService.WebApi.Controllers
         }
 
         [HttpGet("by-customer/{customerId}")]
-        public async Task<IActionResult> GetByCustomerId(string customerId)
+        public async Task<IActionResult> GetByCustomerId(string customerId, [FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetCargoAdsByCustomerIdQuery { CustomerId = customerId }));
+            return Ok(await Mediator.Send(new GetCargoAdsByCustomerIdQuery { CustomerId = customerId, Status = status }));
         }
 
         [HttpGet("by-type/{cargoType}")]
-        public async Task<IActionResult> GetByCargoType(string cargoType)
+        public async Task<IActionResult> GetByCargoType(string cargoType, [FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetCargoAdsByCargoTypeQuery { CargoType = cargoType }));
+            return Ok(await Mediator.Send(new GetCargoAdsByCargoTypeQuery { CargoType = cargoType, Status = status }));
         }
 
-        [HttpGet("by-pickup/{pickupLocationId}")]
-        public async Task<IActionResult> GetByPickupLocation(int pickupLocationId)
+        [HttpGet("by-pick-city/{city}")]
+        public async Task<IActionResult> GetByPickCity(string city, [FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetCargoAdsByPickupLocationQuery { PickupLocationId = pickupLocationId }));
+            return Ok(await Mediator.Send(new GetCargoAdsByPickCityQuery { City = city, Status = status }));
         }
 
-        [HttpGet("by-dropoff/{dropoffLocationId}")]
-        public async Task<IActionResult> GetByDropoffLocation(int dropoffLocationId)
+        [HttpGet("by-pick-country/{country}")]
+        public async Task<IActionResult> GetByPickCountry(string country, [FromQuery] byte? status = null)
         {
-            return Ok(await Mediator.Send(new GetCargoAdsByDropoffLocationQuery { DropoffLocationId = dropoffLocationId }));
+            return Ok(await Mediator.Send(new GetCargoAdsByPickCountryQuery { Country = country, Status = status }));
         }
+
+        [HttpGet("by-drop-city/{city}")]
+        public async Task<IActionResult> GetByDropCity(string city, [FromQuery] byte? status = null)
+        {
+            return Ok(await Mediator.Send(new GetCargoAdsByDropCityQuery { City = city, Status = status }));
+        }
+
+        [HttpGet("by-drop-country/{country}")]
+        public async Task<IActionResult> GetByDropCountry(string country, [FromQuery] byte? status = null)
+        {
+            return Ok(await Mediator.Send(new GetCargoAdsByDropCountryQuery { Country = country, Status = status }));
+        }
+         
+        
+ 
     }
 } 

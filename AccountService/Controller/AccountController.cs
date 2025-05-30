@@ -7,14 +7,27 @@ using AccountService.Application.Features.Users.Commands.GenerateForgotPasswordT
 using AccountService.Application.Features.Users.Commands.LogInCommand;
 using AccountService.Application.Features.Users.Commands.SignUpCommand;
 using AccountService.Application.Features.Users.Commands.UpdateUserCommand;
-using AccountService.Application.Features.Users.Commands.ValidateRefreshToken;
+using AccountService.Application.Features.Users.Commands.ValidateRefreshToken; 
 using AccountService.Application.Features.Users.Queries.GetUserByIdQuery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AccountService.Hubs;
+using AccountService.Application.Interfaces;
 
 namespace AccountService.WebApi.Controller
 {
     public class UserController : BaseApiController
     {
+        private readonly NotificationService _notificationService;
+        private readonly IUserRepository _userRepository;
+
+        public UserController(NotificationService notificationService, IUserRepository userRepository)
+        {
+            _notificationService = notificationService;
+            _userRepository = userRepository;
+        }
+
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> SignUpUser(RegisterRequest registerRequest)
         {
@@ -23,6 +36,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(signUpCommand));
         }
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser(LoginUserRequest loginRequest)
         {
@@ -31,6 +45,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(logInCommand));
         }
+        [AllowAnonymous]
         [HttpPost("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string email,string token)
         {
@@ -40,6 +55,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(confirmEmailCommand));
         }
+        [AllowAnonymous]
         [HttpPost("ResendEmailConfirmCode")]
         public async Task<IActionResult> ResendEmailConfirmCode(string email)
         {
@@ -62,7 +78,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(changePasswordCommand));
         }
-
+        [AllowAnonymous]
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest)
         {
@@ -72,6 +88,7 @@ namespace AccountService.WebApi.Controller
 
             return Ok(await Mediator.Send(forgotPasswordCommand));
         }
+        [AllowAnonymous]
         [HttpPost("GenerateForgotPasswordToken")]
         public async Task<IActionResult> GenerateForgotPasswordToken(GenerateForgotPasswordTokenRequest Request)
         {
@@ -120,6 +137,39 @@ namespace AccountService.WebApi.Controller
 
 
             return Ok(await Mediator.Send(updateUserCommand));
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Lockout/{id}")]
+        public async Task<IActionResult> LockoutUser(string id)
+        {
+            var result = await _userRepository.EnableLockoutAsync(id);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Unlock/{id}")]
+        public async Task<IActionResult> UnlockUser(string id)
+        {
+            var result = await _userRepository.DisableLockoutAsync(id);
+            return Ok(result);
+        }
+
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        [HttpGet("OnlineUsers")]
+        public IActionResult GetOnlineUsers()
+        {
+            var users = _notificationService.GetOnlineUsers();
+            return Ok(users.Select(u => new { UserId = u.Key, ConnectionId = u.Value }));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("AllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            return Ok(users);
         }
     }
 }

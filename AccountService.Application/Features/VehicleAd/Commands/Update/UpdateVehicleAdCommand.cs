@@ -9,7 +9,8 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Update
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public int PickUpLocationId { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
         public string VehicleType { get; set; }
         public float Capacity { get; set; }
     }
@@ -30,9 +31,13 @@ namespace AccountService.Application.Features.VehicleAd.Commands.Update
 
             vehicleAd.Title = request.Title;
             vehicleAd.Desc = request.Description;
-            vehicleAd.PickUpLocationId = request.PickUpLocationId;
+            vehicleAd.Country = request.Country;
+            vehicleAd.City = request.City;
             vehicleAd.VehicleType = request.VehicleType;
             vehicleAd.Capacity = request.Capacity;
+            vehicleAd.Admin1Id = "0"; // Assuming 0 is the default admin ID
+            vehicleAd.Admin2Id = "0"; // Assuming 0 is the default admin ID
+            vehicleAd.Status = 0; // Assuming 0 is the default status
 
             await _vehicleAdService.UpdateAsync(vehicleAd);
             return true;

@@ -1,12 +1,15 @@
-using MediatR;
+﻿using MediatR;
 using AccountService.Application.Interfaces;
 using AccountService.Application.Features.VehicleAd.Queries.GetAll;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AccountService.Application.Features.VehicleAd.Queries.GetById
 {
     public class GetVehicleAdByIdQuery : IRequest<VehicleAdDto>
     {
         public int Id { get; set; }
+        public byte? Status { get; set; } // ✅ Status parametresi eklendi
     }
 
     public class GetVehicleAdByIdQueryHandler : IRequestHandler<GetVehicleAdByIdQuery, VehicleAdDto>
@@ -21,20 +24,30 @@ namespace AccountService.Application.Features.VehicleAd.Queries.GetById
         public async Task<VehicleAdDto> Handle(GetVehicleAdByIdQuery request, CancellationToken cancellationToken)
         {
             var vehicleAd = await _vehicleAdService.GetByIdAsync(request.Id);
-            if (vehicleAd == null || !vehicleAd.Active) return null;
+
+            // ✅ Aktiflik ve status kontrolü
+            if (vehicleAd == null || !vehicleAd.Active)
+                return null;
+
+            if (request.Status.HasValue && vehicleAd.Status != request.Status.Value)
+                return null;
 
             return new VehicleAdDto
             {
                 Id = vehicleAd.Id,
                 Title = vehicleAd.Title,
                 Description = vehicleAd.Desc,
-                PickUpLocationId = vehicleAd.PickUpLocationId,
+                Country = vehicleAd.Country,
+                City = vehicleAd.City,
                 CarrierId = vehicleAd.userId,
                 CarrierName = vehicleAd.Carrier.UserName,
                 VehicleType = vehicleAd.VehicleType,
                 Capacity = vehicleAd.Capacity,
-                CreatedDate = vehicleAd.CreatedDate
+                CreatedDate = vehicleAd.CreatedDate,
+                Admin1Id = vehicleAd.Admin1Id,
+                Admin2Id = vehicleAd.Admin2Id,
+                Status = ((Domain.Enums.AdStatus)vehicleAd.Status).ToString(),AdDate=vehicleAd.AdDate
             };
         }
     }
-} 
+}

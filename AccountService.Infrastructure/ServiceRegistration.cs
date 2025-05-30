@@ -20,9 +20,7 @@ namespace AccountService.Infrastructure
 {
     public static class ServiceRegistration
     {
-
-
-        public static void InfraPersistence(this IServiceCollection services,IConfiguration configuration)
+        public static void InfraPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
@@ -43,67 +41,70 @@ namespace AccountService.Infrastructure
                 options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultEmailProvider;
             }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-              .AddJwtBearer(o =>
-              {
-                  o.RequireHttpsMetadata = false;
-                  o.SaveToken = false;
-                  o.TokenValidationParameters = new TokenValidationParameters
-                  {
-                      ValidateIssuerSigningKey = true,
-                      ValidateIssuer = true,
-                      ValidateAudience = true,
-                      ValidateLifetime = true,
-                      ClockSkew = TimeSpan.Zero,
-                      ValidIssuer = configuration["JWTSettings:Issuer"],
-                      ValidAudience = configuration["JWTSettings:Audience"],
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:Key"]))
-                  };
-                  o.Events = new JwtBearerEvents()
-                  {
-                      OnAuthenticationFailed = c =>
-                      {
-                          c.NoResult();
-                          c.Response.StatusCode = 500;
-                          c.Response.ContentType = "text/plain";
-                          return c.Response.WriteAsync(c.Exception.ToString());
-                      },
-                      OnChallenge = context =>
-                      {
-                          context.HandleResponse();
-                          context.Response.StatusCode = 401;
-                          context.Response.ContentType = "application/json";
-                          var result = JsonConvert.SerializeObject(new AccountService.Application.Wrappers.Response<string>("You are not Authorized"));
-                          return context.Response.WriteAsync(result);
-                      },
-                      OnForbidden = context =>
-                      {
-                          context.Response.StatusCode = 403;
-                          context.Response.ContentType = "application/json";
-                          var result = JsonConvert.SerializeObject(new AccountService.Application.Wrappers.Response<string>("You are not authorized to access this resource"));
-                          return context.Response.WriteAsync(result);
-                      },
-                  };
-              });
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWTSettings:Key"])),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = configuration["JWTSettings:Issuer"],
+                    ValidAudience = configuration["JWTSettings:Audience"],
+                    ClockSkew = System.TimeSpan.Zero
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
+                        return System.Threading.Tasks.Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+                        var result = System.Text.Json.JsonSerializer.Serialize(new { message = "Unauthorized" });
+                        return context.Response.WriteAsync(result);
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return System.Threading.Tasks.Task.CompletedTask;
+                    }
+                };
+            });
 
             services.AddSingleton<JwtSecurityTokenHandler>();
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddTransient<IUserRepository, UserRepository>(); 
+            services.AddTransient<IAdminAuthService, AdminAuthService>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<IVehicleSerivce, VehicleRepositoryAsync>();
-            services.AddTransient<ILocationService, LocationRepositoryAsync>();
             services.AddTransient<IVehicleAdService, VehicleAdRepositoryAsync>();
             services.AddTransient<ICargoAdService, CargoAdRepository>();
             services.AddTransient<ICargoOfferService, CargoOfferRepository>();
-            services.AddTransient<IVehicleOfferService, VehicleOfferRepository>(); 
-            
+            services.AddTransient<IVehicleOfferService, VehicleOfferRepository>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IDateTimeService, DateTimeService>();
-
         }
     }
 }

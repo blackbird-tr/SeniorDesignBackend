@@ -15,24 +15,28 @@ namespace AccountService.Domain.Entities
 
         [MaxLength(50)]
         public string? CargoType { get; set; }
-
-        [Required]
-        public int PickupLocationId { get; set; }
+         
 
         [Required]
         public string Title { get; set; }
-
-        [Required]
-        public int DropoffLocationId { get; set; }
+        public string DropCountry { get; set; }
+        public string DropCity { get; set; }
+        public string PickCountry { get; set; }
+        public string PickCity { get; set; }
 
         [Required]
         public decimal Price { get; set; }
+        public string currency { get; set; }
 
         public bool IsExpired { get; set; }
 
+        [Required]
+        public DateTime AdDate { get; set; }
+        public string Admin1Id { get; set; }
+        public string Admin2Id { get; set; }
+        public byte Status { get; set; }
+
         // Navigation properties
-        public User Customer { get; set; }
-        public Location PickupLocation { get; set; }
-        public Location DropoffLocation { get; set; } 
+        public User Customer { get; set; } 
     }
 }

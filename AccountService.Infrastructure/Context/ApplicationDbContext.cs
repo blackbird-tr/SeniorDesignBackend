@@ -28,13 +28,13 @@ namespace AccountService.Infrastructure.Context
         // DbSet Properties
         public DbSet<User> Users { get; set; }
         
-        public DbSet<CargoAd> CargoAds { get; set; } 
-        public DbSet<Location> Locations { get; set; }
+        public DbSet<CargoAd> CargoAds { get; set; }  
         public DbSet<Notification> Notifications { get; set; } 
         public DbSet<Vehicle> Vehicles { get; set; } 
         public DbSet<VehicleAd> VehicleAds { get; set; } 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<VehicleOffer> VehicleOffers { get; set; }
+        public DbSet<Admin> Admins { get; set; }
         public DbSet<CargoOffer> CargoOffers { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -66,24 +66,7 @@ namespace AccountService.Infrastructure.Context
 
             base.OnModelCreating(modelBuilder); // Identity tabloları için şart!
 
-            
-
-             
-
-            modelBuilder.Entity<CargoAd>()
-                .HasOne(c => c.PickupLocation)
-                .WithMany()
-                .HasForeignKey(c => c.PickupLocationId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CargoAd>()
-                .HasOne(c => c.DropoffLocation)
-                .WithMany()
-                .HasForeignKey(c => c.DropoffLocationId)
-                .OnDelete(DeleteBehavior.Restrict);
-        
-
-
+               
             // 2. Tüm foreign key ilişkilerinde default olarak Restrict uygula
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
                          .SelectMany(e => e.GetForeignKeys()))
